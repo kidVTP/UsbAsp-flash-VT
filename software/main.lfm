@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 501
+  Left = 697
   Height = 541
-  Top = 209
+  Top = 256
   Width = 853
   ActiveControl = RadioSPI
   Caption = 'AsProgrammer'
@@ -10,11 +10,11 @@ object MainForm: TMainForm
   Constraints.MinHeight = 300
   Constraints.MinWidth = 300
   Menu = MainMenu
+  Position = poDesktopCenter
+  LCLVersion = '4.4.0.0'
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  Position = poDesktopCenter
-  LCLVersion = '3.2.0.0'
   object ProgressBar: TProgressBar
     Left = 0
     Height = 20
@@ -39,44 +39,44 @@ object MainForm: TMainForm
     TabOrder = 1
     object ButtonRead: TToolButton
       Left = 81
-      Hint = 'Прочитать'
+      Hint = 'ÐŸÑ€Ð¾Ñ‡Ð¸Ñ‚Ð°Ñ‚ÑŒ'
       Top = 2
       ImageIndex = 1
-      OnClick = ButtonReadClick
       ParentShowHint = False
       ShowHint = True
+      OnClick = ButtonReadClick
     end
     object ButtonWrite: TToolButton
       Left = 117
-      Hint = 'Записать'
+      Hint = 'Ð—Ð°Ð¿Ð¸ÑÐ°Ñ‚ÑŒ'
       Top = 2
       DropdownMenu = DropDownMenu
       ImageIndex = 0
-      OnClick = ButtonWriteClick
       ParentShowHint = False
       ShowHint = True
       Style = tbsDropDown
+      OnClick = ButtonWriteClick
     end
     object ButtonErase: TToolButton
       Left = 165
-      Hint = 'Стереть'
+      Hint = 'Ð¡Ñ‚ÐµÑ€ÐµÑ‚ÑŒ'
       Top = 2
       ImageIndex = 5
-      OnClick = ButtonEraseClick
       ParentShowHint = False
       ShowCaption = False
       ShowHint = True
+      OnClick = ButtonEraseClick
     end
     object ButtonVerify: TToolButton
       Left = 201
-      Hint = 'Сравнить содержимое'
+      Hint = 'Ð¡Ñ€Ð°Ð²Ð½Ð¸Ñ‚ÑŒ ÑÐ¾Ð´ÐµÑ€Ð¶Ð¸Ð¼Ð¾Ðµ'
       Top = 2
       DropdownMenu = BlankCheckDropDownMenu
       ImageIndex = 6
-      OnClick = ButtonVerifyClick
       ParentShowHint = False
       ShowHint = True
       Style = tbsDropDown
+      OnClick = ButtonVerifyClick
     end
     object ToolButton1: TToolButton
       Left = 249
@@ -87,24 +87,24 @@ object MainForm: TMainForm
     end
     object ButtonReadID: TToolButton
       Left = 257
-      Hint = 'Прочитать индификатор'
+      Hint = 'ÐŸÑ€Ð¾Ñ‡Ð¸Ñ‚Ð°Ñ‚ÑŒ Ð¸Ð½Ð´Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€'
       Top = 2
       ImageIndex = 2
-      OnClick = ButtonReadIDClick
       ParentShowHint = False
       ShowHint = True
+      OnClick = ButtonReadIDClick
     end
     object ButtonBlock: TToolButton
       Left = 293
-      Hint = 'Снять защиту'
+      Hint = 'Ð¡Ð½ÑÑ‚ÑŒ Ð·Ð°Ñ‰Ð¸Ñ‚Ñƒ'
       Top = 2
       DropdownMenu = DropdownMenuLock
       ImageIndex = 7
-      OnClick = ButtonBlockClick
       ParentShowHint = False
       ShowCaption = False
       ShowHint = True
       Style = tbsDropDown
+      OnClick = ButtonBlockClick
     end
     object ToolButton3: TToolButton
       Left = 73
@@ -154,32 +154,32 @@ object MainForm: TMainForm
     end
     object ButtonOpenHex: TToolButton
       Left = 1
-      Hint = 'Загрузить прошивку в редактор'
+      Hint = 'Ð—Ð°Ð³Ñ€ÑƒÐ·Ð¸Ñ‚ÑŒ Ð¿Ñ€Ð¾ÑˆÐ¸Ð²ÐºÑƒ Ð² Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¾Ñ€'
       Top = 2
       ImageIndex = 4
-      OnClick = ButtonOpenHexClick
       ParentShowHint = False
       ShowCaption = False
       ShowHint = True
+      OnClick = ButtonOpenHexClick
     end
     object ButtonSaveHex: TToolButton
       Left = 37
-      Hint = 'Сохранить прошивку из редактора'
+      Hint = 'Ð¡Ð¾Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ÑŒ Ð¿Ñ€Ð¾ÑˆÐ¸Ð²ÐºÑƒ Ð¸Ð· Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¾Ñ€Ð°'
       Top = 2
       ImageIndex = 3
-      OnClick = ButtonSaveHexClick
       ParentShowHint = False
       ShowCaption = False
       ShowHint = True
+      OnClick = ButtonSaveHexClick
     end
     object ButtonCancel: TToolButton
       Left = 349
-      Hint = 'Прервать текущею операцию'
+      Hint = 'ÐŸÑ€ÐµÑ€Ð²Ð°Ñ‚ÑŒ Ñ‚ÐµÐºÑƒÑ‰ÐµÑŽ Ð¾Ð¿ÐµÑ€Ð°Ñ†Ð¸ÑŽ'
       Top = 2
       ImageIndex = 8
-      OnClick = ButtonCancelClick
       ParentShowHint = False
       ShowHint = True
+      OnClick = ButtonCancelClick
     end
     object ToolButton5: TToolButton
       Left = 385
@@ -209,7 +209,7 @@ object MainForm: TMainForm
     object ComboChipSize: TComboBox
       Left = 24
       Height = 23
-      Hint = 'Размер чипа в байтах'
+      Hint = 'Ð Ð°Ð·Ð¼ÐµÑ€ Ñ‡Ð¸Ð¿Ð° Ð² Ð±Ð°Ð¹Ñ‚Ð°Ñ…'
       Top = 56
       Width = 100
       ItemHeight = 15
@@ -227,14 +227,14 @@ object MainForm: TMainForm
       Width = 100
       Alignment = taCenter
       AutoSize = False
-      Caption = 'Размер'
+      Caption = 'Ð Ð°Ð·Ð¼ÐµÑ€'
       ParentColor = False
       ParentFont = False
     end
     object ComboPageSize: TComboBox
       Left = 24
       Height = 23
-      Hint = 'Размер страницы'
+      Hint = 'Ð Ð°Ð·Ð¼ÐµÑ€ ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñ‹'
       Top = 96
       Width = 100
       ItemHeight = 15
@@ -266,7 +266,7 @@ object MainForm: TMainForm
       Width = 100
       Alignment = taCenter
       AutoSize = False
-      Caption = 'Страница'
+      Caption = 'Ð¡Ñ‚Ñ€Ð°Ð½Ð¸Ñ†Ð°'
       ParentColor = False
       ParentFont = False
     end
@@ -277,7 +277,7 @@ object MainForm: TMainForm
       Width = 100
       Alignment = taCenter
       AutoSize = False
-      Caption = 'Тип адреса'
+      Caption = 'Ð¢Ð¸Ð¿ Ð°Ð´Ñ€ÐµÑÐ°'
       ParentColor = False
       ParentFont = False
       Visible = False
@@ -285,7 +285,7 @@ object MainForm: TMainForm
     object ComboAddrType: TComboBox
       Left = 24
       Height = 23
-      Hint = 'Тип адресации к памяти'
+      Hint = 'Ð¢Ð¸Ð¿ Ð°Ð´Ñ€ÐµÑÐ°Ñ†Ð¸Ð¸ Ðº Ð¿Ð°Ð¼ÑÑ‚Ð¸'
       Top = 136
       Width = 100
       ItemHeight = 15
@@ -308,7 +308,7 @@ object MainForm: TMainForm
     object ComboMWBitLen: TComboBox
       Left = 24
       Height = 23
-      Hint = 'Длинна адреса в битах'
+      Hint = 'Ð”Ð»Ð¸Ð½Ð½Ð° Ð°Ð´Ñ€ÐµÑÐ° Ð² Ð±Ð¸Ñ‚Ð°Ñ…'
       Top = 96
       Width = 100
       ItemHeight = 15
@@ -333,7 +333,7 @@ object MainForm: TMainForm
       Width = 100
       Alignment = taCenter
       AutoSize = False
-      Caption = 'Длина адреса'
+      Caption = 'Ð”Ð»Ð¸Ð½Ð° Ð°Ð´Ñ€ÐµÑÐ°'
       ParentColor = False
       ParentFont = False
       Visible = False
@@ -369,6 +369,7 @@ object MainForm: TMainForm
         '45xx'
         'KB9012'
         '95xx'
+        '25xxN'
       )
       ParentFont = False
       Style = csDropDownList
@@ -383,7 +384,7 @@ object MainForm: TMainForm
       Width = 100
       Alignment = taCenter
       AutoSize = False
-      Caption = 'Команды SPI'
+      Caption = 'ÐšÐ¾Ð¼Ð°Ð½Ð´Ñ‹ SPI'
       ParentColor = False
       ParentFont = False
     end
@@ -406,7 +407,7 @@ object MainForm: TMainForm
         Width = 140
         Alignment = taCenter
         AutoSize = False
-        Caption = 'Адрес устройства'
+        Caption = 'ÐÐ´Ñ€ÐµÑ ÑƒÑÑ‚Ñ€Ð¾Ð¹ÑÑ‚Ð²Ð°'
         ParentColor = False
         ParentFont = False
       end
@@ -488,8 +489,8 @@ object MainForm: TMainForm
         Left = 0
         Height = 19
         Top = 40
-        Width = 126
-        Caption = 'Побайтовое чтение'
+        Width = 258
+        Caption = 'ÐŸÐ¾Ð±Ð°Ð¹Ñ‚Ð¾Ð²Ð¾Ðµ Ñ‡Ñ‚ÐµÐ½Ð¸Ðµ'
         ParentFont = False
         TabOrder = 7
       end
@@ -506,13 +507,13 @@ object MainForm: TMainForm
     object SpeedButton1: TSpeedButton
       Left = 124
       Height = 22
-      Hint = 'Выполнить скрипт'
+      Hint = 'Ð’Ñ‹Ð¿Ð¾Ð»Ð½Ð¸Ñ‚ÑŒ ÑÐºÑ€Ð¸Ð¿Ñ‚'
       Top = 248
       Width = 23
       Caption = '->'
-      OnClick = SpeedButton1Click
       ShowHint = True
       ParentShowHint = False
+      OnClick = SpeedButton1Click
     end
     object Label_chip_scripts: TLabel
       Left = 15
@@ -521,7 +522,7 @@ object MainForm: TMainForm
       Width = 97
       Alignment = taCenter
       AutoSize = False
-      Caption = 'Скрипты'
+      Caption = 'Ð¡ÐºÑ€Ð¸Ð¿Ñ‚Ñ‹'
       ParentColor = False
     end
     object StartAddressEdit: TEdit
@@ -539,7 +540,7 @@ object MainForm: TMainForm
       Left = 8
       Height = 15
       Top = 304
-      Width = 12
+      Width = 11
       Caption = '0x'
       ParentColor = False
     end
@@ -550,7 +551,7 @@ object MainForm: TMainForm
       Width = 138
       Alignment = taCenter
       AutoSize = False
-      Caption = 'Начальный адрес'
+      Caption = 'ÐÐ°Ñ‡Ð°Ð»ÑŒÐ½Ñ‹Ð¹ Ð°Ð´Ñ€ÐµÑ'
       ParentColor = False
     end
   end
@@ -734,22 +735,22 @@ object MainForm: TMainForm
     Left = 336
     Top = 64
     object MenuChip: TMenuItem
-      Caption = 'Микросхема'
+      Caption = 'ÐœÐ¸ÐºÑ€Ð¾ÑÑ…ÐµÐ¼Ð°'
       object MenuFindChip: TMenuItem
-        Caption = 'Поиск'
+        Caption = 'ÐŸÐ¾Ð¸ÑÐº'
         OnClick = MenuFindChipClick
       end
     end
     object MenuOptions: TMenuItem
-      Caption = 'Настройки'
+      Caption = 'ÐÐ°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ¸'
       object MenuAutoCheck: TMenuItem
         AutoCheck = True
-        Caption = 'Проверка записи'
+        Caption = 'ÐŸÑ€Ð¾Ð²ÐµÑ€ÐºÐ° Ð·Ð°Ð¿Ð¸ÑÐ¸'
       end
       object MenuSPI: TMenuItem
         Caption = 'SPI'
         object MenuCH347SPIClock: TMenuItem
-          Caption = 'Частота'
+          Caption = 'Ð§Ð°ÑÑ‚Ð¾Ñ‚Ð°'
           object MenuCH347SPIClock60MHz: TMenuItem
             AutoCheck = True
             Caption = '60 MHz'
@@ -800,7 +801,7 @@ object MainForm: TMainForm
           end
         end
         object MenuArduinoSPIClock: TMenuItem
-          Caption = 'Частота'
+          Caption = 'Ð§Ð°ÑÑ‚Ð¾Ñ‚Ð°'
           object MenuArduinoISP8MHz: TMenuItem
             AutoCheck = True
             Caption = '8 MHz'
@@ -827,7 +828,7 @@ object MainForm: TMainForm
           end
         end
         object MenuSPIClock: TMenuItem
-          Caption = 'Частота'
+          Caption = 'Ð§Ð°ÑÑ‚Ð¾Ñ‚Ð°'
           object Menu3Mhz: TMenuItem
             Tag = 13
             AutoCheck = True
@@ -873,7 +874,7 @@ object MainForm: TMainForm
           end
         end
         object MenuAVRISPSPIClock: TMenuItem
-          Caption = 'Частота'
+          Caption = 'Ð§Ð°ÑÑ‚Ð¾Ñ‚Ð°'
           object MenuAVRISP8MHz: TMenuItem
             AutoCheck = True
             Caption = '8(4) MHz'
@@ -918,7 +919,7 @@ object MainForm: TMainForm
           end
         end
         object MenuFT232SPIClock: TMenuItem
-          Caption = 'Частота'
+          Caption = 'Ð§Ð°ÑÑ‚Ð¾Ñ‚Ð°'
           object MenuFT232SPI30Mhz: TMenuItem
             Tag = 1
             AutoCheck = True
@@ -934,15 +935,15 @@ object MainForm: TMainForm
         end
         object MenuIgnoreBusyBit: TMenuItem
           AutoCheck = True
-          Caption = 'Не проверять Busy бит'
+          Caption = 'ÐÐµ Ð¿Ñ€Ð¾Ð²ÐµÑ€ÑÑ‚ÑŒ Busy Ð±Ð¸Ñ‚'
         end
         object MenuSkipFF: TMenuItem
           AutoCheck = True
-          Caption = 'Не писать FF'
+          Caption = 'ÐÐµ Ð¿Ð¸ÑÐ°Ñ‚ÑŒ FF'
         end
         object MenuSendAB: TMenuItem
           AutoCheck = True
-          Caption = 'Выводить чип из сна'
+          Caption = 'Ð’Ñ‹Ð²Ð¾Ð´Ð¸Ñ‚ÑŒ Ñ‡Ð¸Ð¿ Ð¸Ð· ÑÐ½Ð°'
         end
         object MenuItemBenchmark: TMenuItem
           Caption = 'Benchmark'
@@ -952,7 +953,7 @@ object MainForm: TMainForm
       object MenuMicrowire: TMenuItem
         Caption = 'Microwire (soft)'
         object MenuMWClock: TMenuItem
-          Caption = 'Частота'
+          Caption = 'Ð§Ð°ÑÑ‚Ð¾Ñ‚Ð°'
           object MenuMW32Khz: TMenuItem
             Tag = 7
             AutoCheck = True
@@ -980,7 +981,7 @@ object MainForm: TMainForm
       end
     end
     object MenuItemHardware: TMenuItem
-      Caption = 'Программатор'
+      Caption = 'ÐŸÑ€Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ð°Ñ‚Ð¾Ñ€'
       object MenuHWUSBASP: TMenuItem
         AutoCheck = True
         Caption = 'UsbAsp'
@@ -1020,7 +1021,7 @@ object MainForm: TMainForm
       end
     end
     object ScriptsMenuItem: TMenuItem
-      Caption = 'Скрипты'
+      Caption = 'Ð¡ÐºÑ€Ð¸Ð¿Ñ‚Ñ‹'
       OnClick = ScriptsMenuItemClick
     end
     object LangMenuItem: TMenuItem
@@ -1225,7 +1226,7 @@ object MainForm: TMainForm
     Left = 480
     Top = 176
     object ComboItem1: TMenuItem
-      Caption = 'Снять защиту -> стереть -> записать -> проверить'
+      Caption = 'Ð¡Ð½ÑÑ‚ÑŒ Ð·Ð°Ñ‰Ð¸Ñ‚Ñƒ -> ÑÑ‚ÐµÑ€ÐµÑ‚ÑŒ -> Ð·Ð°Ð¿Ð¸ÑÐ°Ñ‚ÑŒ -> Ð¿Ñ€Ð¾Ð²ÐµÑ€Ð¸Ñ‚ÑŒ'
       OnClick = ComboItem1Click
     end
   end
@@ -1233,17 +1234,17 @@ object MainForm: TMainForm
     Left = 448
     Top = 56
     object MenuGotoOffset: TMenuItem
-      Caption = 'Перейти по адресу'
+      Caption = 'ÐŸÐµÑ€ÐµÐ¹Ñ‚Ð¸ Ð¿Ð¾ Ð°Ð´Ñ€ÐµÑÑƒ'
       OnClick = MenuGotoOffsetClick
     end
     object MenuFind: TMenuItem
-      Caption = 'Поиск'
+      Caption = 'ÐŸÐ¾Ð¸ÑÐº'
       ShortCut = 16454
       OnClick = MenuFindClick
     end
     object AllowInsertItem: TMenuItem
       AutoCheck = True
-      Caption = 'Разрешить режим вставки'
+      Caption = 'Ð Ð°Ð·Ñ€ÐµÑˆÐ¸Ñ‚ÑŒ Ñ€ÐµÐ¶Ð¸Ð¼ Ð²ÑÑ‚Ð°Ð²ÐºÐ¸'
       OnClick = AllowInsertItemClick
     end
     object MenuItem1: TMenuItem
@@ -1251,7 +1252,7 @@ object MainForm: TMainForm
       Enabled = False
     end
     object MenuCopyToClip: TMenuItem
-      Caption = 'Копировать'
+      Caption = 'ÐšÐ¾Ð¿Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ'
       OnClick = MenuCopyToClipClick
     end
   end
@@ -1259,14 +1260,14 @@ object MainForm: TMainForm
     Left = 512
     Top = 56
     object CopyLogMenuItem: TMenuItem
-      Caption = 'Копировать'
+      Caption = 'ÐšÐ¾Ð¿Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ'
       OnClick = CopyLogMenuItemClick
     end
     object MenuItem4: TMenuItem
       Caption = '-'
     end
     object ClearLogMenuItem: TMenuItem
-      Caption = 'Очистить'
+      Caption = 'ÐžÑ‡Ð¸ÑÑ‚Ð¸Ñ‚ÑŒ'
       OnClick = ClearLogMenuItemClick
     end
   end
@@ -1274,15 +1275,15 @@ object MainForm: TMainForm
     Left = 480
     Top = 240
     object MenuItemLockFlash: TMenuItem
-      Caption = 'Поставить защиту'
+      Caption = 'ÐŸÐ¾ÑÑ‚Ð°Ð²Ð¸Ñ‚ÑŒ Ð·Ð°Ñ‰Ð¸Ñ‚Ñƒ'
       OnClick = MenuItemLockFlashClick
     end
     object MenuItemReadSreg: TMenuItem
-      Caption = 'Прочитать SREG'
+      Caption = 'ÐŸÑ€Ð¾Ñ‡Ð¸Ñ‚Ð°Ñ‚ÑŒ SREG'
       OnClick = MenuItemReadSregClick
     end
     object MenuItemEditSreg: TMenuItem
-      Caption = 'Изменить SREG'
+      Caption = 'Ð˜Ð·Ð¼ÐµÐ½Ð¸Ñ‚ÑŒ SREG'
       OnClick = MenuItemEditSregClick
     end
   end
@@ -1290,7 +1291,7 @@ object MainForm: TMainForm
     Left = 480
     Top = 296
     object BlankCheckMenuItem: TMenuItem
-      Caption = 'Проверка на чистоту'
+      Caption = 'ÐŸÑ€Ð¾Ð²ÐµÑ€ÐºÐ° Ð½Ð° Ñ‡Ð¸ÑÑ‚Ð¾Ñ‚Ñƒ'
       OnClick = BlankCheckMenuItemClick
     end
   end
