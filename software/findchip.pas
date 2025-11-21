@@ -205,6 +205,11 @@ begin
                else
                  Main.CurrentICParam.Size := 0;
 
+               if  ChipNode.Attributes.GetNamedItem('spare') <> nil then
+                 Main.CurrentICParam.Spare := StrToInt(UTF16ToUTF8(ChipNode.Attributes.GetNamedItem('spare').NodeValue))
+               else
+                 Main.CurrentICParam.Spare := 0;
+
                if ChipNode.Attributes.GetNamedItem('script') <> nil then
                begin
                  Main.CurrentICParam.Script:= UTF16ToUTF8(ChipNode.Attributes.GetNamedItem('script').NodeValue);
@@ -239,6 +244,11 @@ begin
                   MainForm.ComboChipSize.Text := IntToStr(CurrentICParam.Size)
                 else
                   MainForm.ComboChipSize.Text := 'Chip size';
+
+                if CurrentICParam.Spare > 0 then
+                  MainForm.ComboPageSparesize.Text := IntToStr(CurrentICParam.Spare)
+                else
+                  MainForm.ComboPageSparesize.Text := 'Spare size';
 
               end;
            end;

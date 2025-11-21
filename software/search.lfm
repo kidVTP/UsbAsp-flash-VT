@@ -1,18 +1,17 @@
 object SearchForm: TSearchForm
-  Left = 625
+  Left = 469
   Height = 225
-  Top = 236
+  Top = 170
   Width = 249
   ActiveControl = TextToFindEdit
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
-  Caption = 'Поиск'
+  Caption = 'Search'
   ClientHeight = 225
   ClientWidth = 249
   FormStyle = fsStayOnTop
   Position = poOwnerFormCenter
-  LCLVersion = '1.6.4.0'
-  Visible = False
+  LCLVersion = '4.4.0.0'
   object TextToFindEdit: TEdit
     Left = 18
     Height = 23
@@ -26,32 +25,32 @@ object SearchForm: TSearchForm
     Height = 25
     Top = 192
     Width = 75
-    Caption = 'Найти'
-    OnClick = FindButtonClick
+    Caption = 'Find'
     TabOrder = 7
+    OnClick = FindButtonClick
   end
   object HexCheckBox: TCheckBox
     Left = 18
     Height = 19
     Top = 96
-    Width = 137
-    Caption = 'Искать HEX значение'
+    Width = 109
+    Caption = 'Search HEX value'
     TabOrder = 2
   end
   object FromBeginingCheckBox: TCheckBox
     Left = 18
     Height = 19
     Top = 113
-    Width = 106
-    Caption = 'Искать сначала'
+    Width = 159
+    Caption = 'Search from the beginning'
     TabOrder = 3
   end
   object CaseSenseCheckBox: TCheckBox
     Left = 18
     Height = 19
     Top = 129
-    Width = 124
-    Caption = 'Учитывать регистр'
+    Width = 98
+    Caption = 'Case sensitivity'
     TabOrder = 4
   end
   object ReplaceEdit: TEdit
@@ -69,7 +68,7 @@ object SearchForm: TSearchForm
     Width = 214
     Alignment = taCenter
     AutoSize = False
-    Caption = 'Искать'
+    Caption = 'Find'
     ParentColor = False
   end
   object ReplaceLabel: TLabel
@@ -79,23 +78,23 @@ object SearchForm: TSearchForm
     Width = 214
     Alignment = taCenter
     AutoSize = False
-    Caption = 'заменить на:'
+    Caption = 'replace to:'
     ParentColor = False
   end
   object ReplaceCheckBox: TCheckBox
     Left = 18
     Height = 19
     Top = 152
-    Width = 73
-    Caption = 'Заменить'
+    Width = 59
+    Caption = 'Replace'
     TabOrder = 5
   end
   object ReplaceAllCheckBox: TCheckBox
     Left = 18
     Height = 19
     Top = 168
-    Width = 94
-    Caption = 'Заменить все'
+    Width = 74
+    Caption = 'Replace all'
     TabOrder = 6
   end
 end

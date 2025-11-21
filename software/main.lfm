@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 697
+  Left = 847
   Height = 541
-  Top = 256
+  Top = 263
   Width = 853
   ActiveControl = RadioSPI
   Caption = 'AsProgrammer'
@@ -39,7 +39,7 @@ object MainForm: TMainForm
     TabOrder = 1
     object ButtonRead: TToolButton
       Left = 81
-      Hint = 'ÐŸÑ€Ð¾Ñ‡Ð¸Ñ‚Ð°Ñ‚ÑŒ'
+      Hint = 'Read IC'
       Top = 2
       ImageIndex = 1
       ParentShowHint = False
@@ -48,7 +48,7 @@ object MainForm: TMainForm
     end
     object ButtonWrite: TToolButton
       Left = 117
-      Hint = 'Ð—Ð°Ð¿Ð¸ÑÐ°Ñ‚ÑŒ'
+      Hint = 'Program IC'
       Top = 2
       DropdownMenu = DropDownMenu
       ImageIndex = 0
@@ -59,7 +59,7 @@ object MainForm: TMainForm
     end
     object ButtonErase: TToolButton
       Left = 165
-      Hint = 'Ð¡Ñ‚ÐµÑ€ÐµÑ‚ÑŒ'
+      Hint = 'Erase IC'
       Top = 2
       ImageIndex = 5
       ParentShowHint = False
@@ -69,7 +69,7 @@ object MainForm: TMainForm
     end
     object ButtonVerify: TToolButton
       Left = 201
-      Hint = 'Ð¡Ñ€Ð°Ð²Ð½Ð¸Ñ‚ÑŒ ÑÐ¾Ð´ÐµÑ€Ð¶Ð¸Ð¼Ð¾Ðµ'
+      Hint = 'Verify IC'
       Top = 2
       DropdownMenu = BlankCheckDropDownMenu
       ImageIndex = 6
@@ -87,7 +87,7 @@ object MainForm: TMainForm
     end
     object ButtonReadID: TToolButton
       Left = 257
-      Hint = 'ÐŸÑ€Ð¾Ñ‡Ð¸Ñ‚Ð°Ñ‚ÑŒ Ð¸Ð½Ð´Ð¸Ñ„Ð¸ÐºÐ°Ñ‚Ð¾Ñ€'
+      Hint = 'Read ID'
       Top = 2
       ImageIndex = 2
       ParentShowHint = False
@@ -96,7 +96,7 @@ object MainForm: TMainForm
     end
     object ButtonBlock: TToolButton
       Left = 293
-      Hint = 'Ð¡Ð½ÑÑ‚ÑŒ Ð·Ð°Ñ‰Ð¸Ñ‚Ñƒ'
+      Hint = 'Unprotect'
       Top = 2
       DropdownMenu = DropdownMenuLock
       ImageIndex = 7
@@ -154,7 +154,7 @@ object MainForm: TMainForm
     end
     object ButtonOpenHex: TToolButton
       Left = 1
-      Hint = 'Ð—Ð°Ð³Ñ€ÑƒÐ·Ð¸Ñ‚ÑŒ Ð¿Ñ€Ð¾ÑˆÐ¸Ð²ÐºÑƒ Ð² Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¾Ñ€'
+      Hint = 'Open file'
       Top = 2
       ImageIndex = 4
       ParentShowHint = False
@@ -164,7 +164,7 @@ object MainForm: TMainForm
     end
     object ButtonSaveHex: TToolButton
       Left = 37
-      Hint = 'Ð¡Ð¾Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ÑŒ Ð¿Ñ€Ð¾ÑˆÐ¸Ð²ÐºÑƒ Ð¸Ð· Ñ€ÐµÐ´Ð°ÐºÑ‚Ð¾Ñ€Ð°'
+      Hint = 'Save file'
       Top = 2
       ImageIndex = 3
       ParentShowHint = False
@@ -174,7 +174,7 @@ object MainForm: TMainForm
     end
     object ButtonCancel: TToolButton
       Left = 349
-      Hint = 'ÐŸÑ€ÐµÑ€Ð²Ð°Ñ‚ÑŒ Ñ‚ÐµÐºÑƒÑ‰ÐµÑŽ Ð¾Ð¿ÐµÑ€Ð°Ñ†Ð¸ÑŽ'
+      Hint = 'Cancel'
       Top = 2
       ImageIndex = 8
       ParentShowHint = False
@@ -209,7 +209,7 @@ object MainForm: TMainForm
     object ComboChipSize: TComboBox
       Left = 24
       Height = 23
-      Hint = 'Ð Ð°Ð·Ð¼ÐµÑ€ Ñ‡Ð¸Ð¿Ð° Ð² Ð±Ð°Ð¹Ñ‚Ð°Ñ…'
+      Hint = 'IC size in bytes'
       Top = 56
       Width = 100
       ItemHeight = 15
@@ -217,7 +217,7 @@ object MainForm: TMainForm
       ParentFont = False
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 0
+      TabOrder = 7
       Text = 'Chip size'
     end
     object Label2: TLabel
@@ -227,14 +227,14 @@ object MainForm: TMainForm
       Width = 100
       Alignment = taCenter
       AutoSize = False
-      Caption = 'Ð Ð°Ð·Ð¼ÐµÑ€'
+      Caption = 'Size'
       ParentColor = False
       ParentFont = False
     end
     object ComboPageSize: TComboBox
       Left = 24
       Height = 23
-      Hint = 'Ð Ð°Ð·Ð¼ÐµÑ€ ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ†Ñ‹'
+      Hint = 'Page size'
       Top = 96
       Width = 100
       ItemHeight = 15
@@ -256,7 +256,7 @@ object MainForm: TMainForm
       ParentFont = False
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 1
+      TabOrder = 0
       Text = 'Page size'
     end
     object Label1: TLabel
@@ -266,7 +266,7 @@ object MainForm: TMainForm
       Width = 100
       Alignment = taCenter
       AutoSize = False
-      Caption = 'Ð¡Ñ‚Ñ€Ð°Ð½Ð¸Ñ†Ð°'
+      Caption = 'Page'
       ParentColor = False
       ParentFont = False
     end
@@ -277,7 +277,7 @@ object MainForm: TMainForm
       Width = 100
       Alignment = taCenter
       AutoSize = False
-      Caption = 'Ð¢Ð¸Ð¿ Ð°Ð´Ñ€ÐµÑÐ°'
+      Caption = 'Address type'
       ParentColor = False
       ParentFont = False
       Visible = False
@@ -285,7 +285,7 @@ object MainForm: TMainForm
     object ComboAddrType: TComboBox
       Left = 24
       Height = 23
-      Hint = 'Ð¢Ð¸Ð¿ Ð°Ð´Ñ€ÐµÑÐ°Ñ†Ð¸Ð¸ Ðº Ð¿Ð°Ð¼ÑÑ‚Ð¸'
+      Hint = 'Memory addressing type'
       Top = 136
       Width = 100
       ItemHeight = 15
@@ -302,13 +302,13 @@ object MainForm: TMainForm
       ParentShowHint = False
       ShowHint = True
       Style = csDropDownList
-      TabOrder = 2
+      TabOrder = 1
       Visible = False
     end
     object ComboMWBitLen: TComboBox
       Left = 24
       Height = 23
-      Hint = 'Ð”Ð»Ð¸Ð½Ð½Ð° Ð°Ð´Ñ€ÐµÑÐ° Ð² Ð±Ð¸Ñ‚Ð°Ñ…'
+      Hint = 'Address Length in bits'
       Top = 96
       Width = 100
       ItemHeight = 15
@@ -322,7 +322,7 @@ object MainForm: TMainForm
       ParentFont = False
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 3
+      TabOrder = 2
       Text = 'MW addr len'
       Visible = False
     end
@@ -333,7 +333,7 @@ object MainForm: TMainForm
       Width = 100
       Alignment = taCenter
       AutoSize = False
-      Caption = 'Ð”Ð»Ð¸Ð½Ð° Ð°Ð´Ñ€ÐµÑÐ°'
+      Caption = 'Address length'
       ParentColor = False
       ParentFont = False
       Visible = False
@@ -373,7 +373,7 @@ object MainForm: TMainForm
       )
       ParentFont = False
       Style = csDropDownList
-      TabOrder = 4
+      TabOrder = 3
       Text = '25xx'
       OnChange = ComboSPICMDChange
     end
@@ -384,7 +384,7 @@ object MainForm: TMainForm
       Width = 100
       Alignment = taCenter
       AutoSize = False
-      Caption = 'ÐšÐ¾Ð¼Ð°Ð½Ð´Ñ‹ SPI'
+      Caption = 'SPI commands'
       ParentColor = False
       ParentFont = False
     end
@@ -397,7 +397,7 @@ object MainForm: TMainForm
       ClientHeight = 64
       ClientWidth = 144
       ParentFont = False
-      TabOrder = 5
+      TabOrder = 4
       UseDockManager = False
       Visible = False
       object Label_I2C_DevAddr: TLabel
@@ -407,7 +407,7 @@ object MainForm: TMainForm
         Width = 140
         Alignment = taCenter
         AutoSize = False
-        Caption = 'ÐÐ´Ñ€ÐµÑ ÑƒÑÑ‚Ñ€Ð¾Ð¹ÑÑ‚Ð²Ð°'
+        Caption = 'Device address'
         ParentColor = False
         ParentFont = False
       end
@@ -489,8 +489,8 @@ object MainForm: TMainForm
         Left = 0
         Height = 19
         Top = 40
-        Width = 258
-        Caption = 'ÐŸÐ¾Ð±Ð°Ð¹Ñ‚Ð¾Ð²Ð¾Ðµ Ñ‡Ñ‚ÐµÐ½Ð¸Ðµ'
+        Width = 112
+        Caption = 'Byte-wise reading'
         ParentFont = False
         TabOrder = 7
       end
@@ -502,12 +502,12 @@ object MainForm: TMainForm
       Width = 100
       ItemHeight = 15
       Style = csDropDownList
-      TabOrder = 6
+      TabOrder = 5
     end
     object SpeedButton1: TSpeedButton
       Left = 124
       Height = 22
-      Hint = 'Ð’Ñ‹Ð¿Ð¾Ð»Ð½Ð¸Ñ‚ÑŒ ÑÐºÑ€Ð¸Ð¿Ñ‚'
+      Hint = 'Run script'
       Top = 248
       Width = 23
       Caption = '->'
@@ -522,7 +522,7 @@ object MainForm: TMainForm
       Width = 97
       Alignment = taCenter
       AutoSize = False
-      Caption = 'Ð¡ÐºÑ€Ð¸Ð¿Ñ‚Ñ‹'
+      Caption = 'Scripts'
       ParentColor = False
     end
     object StartAddressEdit: TEdit
@@ -531,7 +531,7 @@ object MainForm: TMainForm
       Top = 296
       Width = 63
       MaxLength = 8
-      TabOrder = 7
+      TabOrder = 6
       Text = '000000'
       OnChange = StartAddressEditChange
       OnKeyPress = StartAddressEditKeyPress
@@ -551,8 +551,33 @@ object MainForm: TMainForm
       Width = 138
       Alignment = taCenter
       AutoSize = False
-      Caption = 'ÐÐ°Ñ‡Ð°Ð»ÑŒÐ½Ñ‹Ð¹ Ð°Ð´Ñ€ÐµÑ'
+      Caption = 'Start address'
       ParentColor = False
+    end
+    object LabelSpare: TLabel
+      Left = 24
+      Height = 16
+      Top = 160
+      Width = 100
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'Spare'
+      ParentColor = False
+      ParentFont = False
+    end
+    object ComboPageSpareSize: TComboBox
+      Left = 24
+      Height = 23
+      Hint = 'Spare size'
+      Top = 176
+      Width = 100
+      ItemHeight = 15
+      MaxLength = 10
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 8
+      Text = 'Spare size'
     end
   end
   object MPHexEditorEx: TMPHexEditorEx
@@ -700,7 +725,7 @@ object MainForm: TMainForm
     Width = 853
     Align = alBottom
     Lines.Strings = (
-      'AsProgrammer v2.1.0'
+      'AsProgrammer v2.1.1'
       'https://github.com/nofeletru/UsbAsp-flash'
     )
     ParentFont = False
@@ -735,22 +760,22 @@ object MainForm: TMainForm
     Left = 336
     Top = 64
     object MenuChip: TMenuItem
-      Caption = 'ÐœÐ¸ÐºÑ€Ð¾ÑÑ…ÐµÐ¼Ð°'
+      Caption = 'IC'
       object MenuFindChip: TMenuItem
-        Caption = 'ÐŸÐ¾Ð¸ÑÐº'
+        Caption = 'Search'
         OnClick = MenuFindChipClick
       end
     end
     object MenuOptions: TMenuItem
-      Caption = 'ÐÐ°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ¸'
+      Caption = 'Options'
       object MenuAutoCheck: TMenuItem
         AutoCheck = True
-        Caption = 'ÐŸÑ€Ð¾Ð²ÐµÑ€ÐºÐ° Ð·Ð°Ð¿Ð¸ÑÐ¸'
+        Caption = 'Verify'
       end
       object MenuSPI: TMenuItem
         Caption = 'SPI'
         object MenuCH347SPIClock: TMenuItem
-          Caption = 'Ð§Ð°ÑÑ‚Ð¾Ñ‚Ð°'
+          Caption = 'Frequency'
           object MenuCH347SPIClock60MHz: TMenuItem
             AutoCheck = True
             Caption = '60 MHz'
@@ -801,7 +826,7 @@ object MainForm: TMainForm
           end
         end
         object MenuArduinoSPIClock: TMenuItem
-          Caption = 'Ð§Ð°ÑÑ‚Ð¾Ñ‚Ð°'
+          Caption = 'Frequency'
           object MenuArduinoISP8MHz: TMenuItem
             AutoCheck = True
             Caption = '8 MHz'
@@ -828,7 +853,7 @@ object MainForm: TMainForm
           end
         end
         object MenuSPIClock: TMenuItem
-          Caption = 'Ð§Ð°ÑÑ‚Ð¾Ñ‚Ð°'
+          Caption = 'Frequency'
           object Menu3Mhz: TMenuItem
             Tag = 13
             AutoCheck = True
@@ -874,7 +899,7 @@ object MainForm: TMainForm
           end
         end
         object MenuAVRISPSPIClock: TMenuItem
-          Caption = 'Ð§Ð°ÑÑ‚Ð¾Ñ‚Ð°'
+          Caption = 'Frequency'
           object MenuAVRISP8MHz: TMenuItem
             AutoCheck = True
             Caption = '8(4) MHz'
@@ -919,7 +944,7 @@ object MainForm: TMainForm
           end
         end
         object MenuFT232SPIClock: TMenuItem
-          Caption = 'Ð§Ð°ÑÑ‚Ð¾Ñ‚Ð°'
+          Caption = 'Frequency'
           object MenuFT232SPI30Mhz: TMenuItem
             Tag = 1
             AutoCheck = True
@@ -935,15 +960,15 @@ object MainForm: TMainForm
         end
         object MenuIgnoreBusyBit: TMenuItem
           AutoCheck = True
-          Caption = 'ÐÐµ Ð¿Ñ€Ð¾Ð²ÐµÑ€ÑÑ‚ÑŒ Busy Ð±Ð¸Ñ‚'
+          Caption = 'Do not chek Busy bit'
         end
         object MenuSkipFF: TMenuItem
           AutoCheck = True
-          Caption = 'ÐÐµ Ð¿Ð¸ÑÐ°Ñ‚ÑŒ FF'
+          Caption = 'Do not write FF'
         end
         object MenuSendAB: TMenuItem
           AutoCheck = True
-          Caption = 'Ð’Ñ‹Ð²Ð¾Ð´Ð¸Ñ‚ÑŒ Ñ‡Ð¸Ð¿ Ð¸Ð· ÑÐ½Ð°'
+          Caption = 'Send \"wake-up\" to flash'
         end
         object MenuItemBenchmark: TMenuItem
           Caption = 'Benchmark'
@@ -953,7 +978,7 @@ object MainForm: TMainForm
       object MenuMicrowire: TMenuItem
         Caption = 'Microwire (soft)'
         object MenuMWClock: TMenuItem
-          Caption = 'Ð§Ð°ÑÑ‚Ð¾Ñ‚Ð°'
+          Caption = 'Frequency'
           object MenuMW32Khz: TMenuItem
             Tag = 7
             AutoCheck = True
@@ -981,7 +1006,7 @@ object MainForm: TMainForm
       end
     end
     object MenuItemHardware: TMenuItem
-      Caption = 'ÐŸÑ€Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ð°Ñ‚Ð¾Ñ€'
+      Caption = 'Hardware'
       object MenuHWUSBASP: TMenuItem
         AutoCheck = True
         Caption = 'UsbAsp'
@@ -1021,7 +1046,7 @@ object MainForm: TMainForm
       end
     end
     object ScriptsMenuItem: TMenuItem
-      Caption = 'Ð¡ÐºÑ€Ð¸Ð¿Ñ‚Ñ‹'
+      Caption = 'Scripts'
       OnClick = ScriptsMenuItemClick
     end
     object LangMenuItem: TMenuItem
@@ -1226,25 +1251,25 @@ object MainForm: TMainForm
     Left = 480
     Top = 176
     object ComboItem1: TMenuItem
-      Caption = 'Ð¡Ð½ÑÑ‚ÑŒ Ð·Ð°Ñ‰Ð¸Ñ‚Ñƒ -> ÑÑ‚ÐµÑ€ÐµÑ‚ÑŒ -> Ð·Ð°Ð¿Ð¸ÑÐ°Ñ‚ÑŒ -> Ð¿Ñ€Ð¾Ð²ÐµÑ€Ð¸Ñ‚ÑŒ'
+      Caption = 'Unprotect -> erase -> program -> verify'
       OnClick = ComboItem1Click
     end
   end
   object EditorPopupMenu: TPopupMenu
-    Left = 448
-    Top = 56
+    Left = 496
+    Top = 128
     object MenuGotoOffset: TMenuItem
-      Caption = 'ÐŸÐµÑ€ÐµÐ¹Ñ‚Ð¸ Ð¿Ð¾ Ð°Ð´Ñ€ÐµÑÑƒ'
+      Caption = 'Goto address'
       OnClick = MenuGotoOffsetClick
     end
     object MenuFind: TMenuItem
-      Caption = 'ÐŸÐ¾Ð¸ÑÐº'
+      Caption = 'Search'
       ShortCut = 16454
       OnClick = MenuFindClick
     end
     object AllowInsertItem: TMenuItem
       AutoCheck = True
-      Caption = 'Ð Ð°Ð·Ñ€ÐµÑˆÐ¸Ñ‚ÑŒ Ñ€ÐµÐ¶Ð¸Ð¼ Ð²ÑÑ‚Ð°Ð²ÐºÐ¸'
+      Caption = 'Insert mode'
       OnClick = AllowInsertItemClick
     end
     object MenuItem1: TMenuItem
@@ -1252,7 +1277,7 @@ object MainForm: TMainForm
       Enabled = False
     end
     object MenuCopyToClip: TMenuItem
-      Caption = 'ÐšÐ¾Ð¿Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ'
+      Caption = 'Copy'
       OnClick = MenuCopyToClipClick
     end
   end
@@ -1260,14 +1285,14 @@ object MainForm: TMainForm
     Left = 512
     Top = 56
     object CopyLogMenuItem: TMenuItem
-      Caption = 'ÐšÐ¾Ð¿Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ'
+      Caption = 'Copy'
       OnClick = CopyLogMenuItemClick
     end
     object MenuItem4: TMenuItem
       Caption = '-'
     end
     object ClearLogMenuItem: TMenuItem
-      Caption = 'ÐžÑ‡Ð¸ÑÑ‚Ð¸Ñ‚ÑŒ'
+      Caption = 'Clear'
       OnClick = ClearLogMenuItemClick
     end
   end
@@ -1275,15 +1300,15 @@ object MainForm: TMainForm
     Left = 480
     Top = 240
     object MenuItemLockFlash: TMenuItem
-      Caption = 'ÐŸÐ¾ÑÑ‚Ð°Ð²Ð¸Ñ‚ÑŒ Ð·Ð°Ñ‰Ð¸Ñ‚Ñƒ'
+      Caption = 'Set the protection bits'
       OnClick = MenuItemLockFlashClick
     end
     object MenuItemReadSreg: TMenuItem
-      Caption = 'ÐŸÑ€Ð¾Ñ‡Ð¸Ñ‚Ð°Ñ‚ÑŒ SREG'
+      Caption = 'Read SREG'
       OnClick = MenuItemReadSregClick
     end
     object MenuItemEditSreg: TMenuItem
-      Caption = 'Ð˜Ð·Ð¼ÐµÐ½Ð¸Ñ‚ÑŒ SREG'
+      Caption = 'Edit SREG'
       OnClick = MenuItemEditSregClick
     end
   end
@@ -1291,7 +1316,7 @@ object MainForm: TMainForm
     Left = 480
     Top = 296
     object BlankCheckMenuItem: TMenuItem
-      Caption = 'ÐŸÑ€Ð¾Ð²ÐµÑ€ÐºÐ° Ð½Ð° Ñ‡Ð¸ÑÑ‚Ð¾Ñ‚Ñƒ'
+      Caption = 'Blank check'
       OnClick = BlankCheckMenuItemClick
     end
   end

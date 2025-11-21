@@ -31,11 +31,14 @@ type
     CheckBox_I2C_A2: TToggleBox;
     ComboAddrType: TComboBox;
     ComboBox_chip_scriptrun: TComboBox;
+    ComboPageSpare: TComboBox;
+    ComboPageSpareSize: TComboBox;
     ComboSPICMD: TComboBox;
     ComboChipSize: TComboBox;
     ComboMWBitLen: TComboBox;
     ComboPageSize: TComboBox;
     Label6: TLabel;
+    LabelSpare: TLabel;
     Label_StartAddress: TLabel;
     MenuHWFT232H: TMenuItem;
     MenuFT232SPIClock: TMenuItem;
@@ -231,6 +234,7 @@ type
   TCurrentICParam = record
     Name: string;
     Page: integer;
+    Spare: integer;
     Size: Longword;
     SpiCmd: byte;
     I2CAddrType: byte;
@@ -258,7 +262,7 @@ implementation
 
 var
   TimeCounter: TDateTime;
-  CurrentLang: string = 'ru';
+  CurrentLang: string = 'en';
 
 {$R *.lfm}
 
@@ -283,6 +287,11 @@ begin
   if IsNumber(MainForm.ComboChipSize.Text) then
     CurrentICParam.Size := StrToInt(MainForm.ComboChipSize.Text) else
       CurrentICParam.Size := 0;
+      
+  if IsNumber(MainForm.ComboPageSpareSize.Text) then
+    CurrentICParam.Spare := StrToInt(MainForm.ComboPageSpareSize.Text) else
+      CurrentICParam.Spare := 0;
+
 end;
 
 function UserCancel(): boolean;
@@ -409,7 +418,7 @@ begin
 
   if CurrentLang = '' then
   begin
-    CurrentLang := 'ru';
+    CurrentLang := 'en';
     Exit;
   end;
 
@@ -782,7 +791,9 @@ end;
 // Định nghĩa hàm
 procedure WriteFlash25NAND(var RomStream: TMemoryStream; StartAddress, WriteSize: cardinal; PageSize: word; WriteType: integer);
 var
-  DataChunk: array[0..SPI_NAND_TOTAL_PAGE_SIZE - 1] of byte; // Dùng kích thước trang + spare
+  SPI_NAND_TOTAL_PAGE_SIZE: integer;
+  //DataChunk: array[0..SPI_NAND_TOTAL_PAGE_SIZE - 1] of byte; // Dùng kích thước trang + spare  | khi SPI_NAND_TOTAL_PAGE_SIZE được set trong spi25nand   | mảng tĩnh
+  DataChunk: array of byte; // Dùng kích thước trang + spare       | mảng động
   Address: cardinal;
   PageAddr: cardinal;
   PageCount: cardinal;
@@ -802,11 +813,15 @@ begin
     exit;
   end;
 
+  SPI_NAND_TOTAL_PAGE_SIZE := StrToInt(MainForm.ComboPageSize.Text) + StrToInt(MainForm.ComboPageSpareSize.Text);  // page size + spare size 2112 bytes
+
+  SetLength(DataChunk, SPI_NAND_TOTAL_PAGE_SIZE); // Khởi tạo mảng đúng cách      | mảng động
+
   LogPrint('Writing SPI NAND Flash (WriteType: ' + IntToStr(WriteType) + ')'); // Log loại ghi
   BytesWrite := 0;
   // PageAddr := StartAddress; // Không còn đúng ý nghĩa như trước, dùng để tính số trang
-  PageCount := WriteSize div SPI_NAND_PAGE_SIZE; // Số trang cần ghi
-  if (WriteSize mod SPI_NAND_PAGE_SIZE) > 0 then Inc(PageCount); // Nếu có phần dư, thêm 1 trang
+  PageCount := WriteSize div StrToInt(MainForm.ComboPageSize.Text); // Số trang cần ghi
+  if (WriteSize mod StrToInt(MainForm.ComboPageSize.Text)) > 0 then Inc(PageCount); // Nếu có phần dư, thêm 1 trang
   MainForm.ProgressBar.Max := PageCount; // Cập nhật thanh tiến trình theo trang
 
   // Bỏ qua WriteType phức tạp như SSTB/SSTW cho NAND, chỉ dùng Page
@@ -816,7 +831,8 @@ begin
   for PageAddr := 0 to PageCount - 1 do
   begin
     // Đọc dữ liệu từ stream cho trang này - chỉ đọc phần page size
-    RomStream.ReadBuffer(DataChunk, SPI_NAND_PAGE_SIZE);
+    //RomStream.ReadBuffer(DataChunk, StrToInt(MainForm.ComboPageSize.Text));   //     | mảng tĩnh
+    RomStream.ReadBuffer(DataChunk[0], StrToInt(MainForm.ComboPageSize.Text));   //     | mảng động
 
     // Nếu phần còn lại trong stream nhỏ hơn SPI_NAND_PAGE_SIZE, cần fill phần còn lại bằng $FF (hoặc giá trị mặc định)
     if RomStream.Position > RomStream.Size then
@@ -825,15 +841,15 @@ begin
       // if (PageAddr * SPI_NAND_PAGE_SIZE) >= WriteSize then Break; // Nếu đã ghi xong phần cần ghi - không cần thiết nếu DataSize được đảm bảo đúng
       // Fill phần còn lại của trang hiện tại bằng $FF
       // Vị trí hiện tại trong stream khi bắt đầu đọc trang này
-      startPos:= PageAddr * SPI_NAND_PAGE_SIZE;
+      startPos:= PageAddr * StrToInt(MainForm.ComboPageSize.Text);
       // Vị trí sau khi đọc phần còn lại
       endPos:= RomStream.Position;
       // Số byte đã đọc thực tế
       bytesReadThisPage:= endPos - startPos;
       // Fill phần còn lại
-      if bytesReadThisPage < SPI_NAND_PAGE_SIZE then
+      if bytesReadThisPage < StrToInt(MainForm.ComboPageSize.Text) then
       begin
-        FillByte(DataChunk[bytesReadThisPage], SPI_NAND_PAGE_SIZE - bytesReadThisPage, $FF);
+        FillByte(DataChunk[bytesReadThisPage], StrToInt(MainForm.ComboPageSize.Text) - bytesReadThisPage, $FF);
       end;
     end;
     // else: RomStream.ReadBuffer đã đọc đủ SPI_NAND_PAGE_SIZE byte vào DataChunk
@@ -852,7 +868,7 @@ begin
       else
       begin
         // BƯỚC 2: Kiểm tra byte giữa (giả sử là byte ở giữa mảng, index = (SPI_NAND_PAGE_SIZE - 1) div 2)
-        PageIndex := (SPI_NAND_PAGE_SIZE - 1) div 2;
+        PageIndex := (StrToInt(MainForm.ComboPageSize.Text) - 1) div 2;
         MiddleByte := DataChunk[PageIndex];
         if MiddleByte <> $FF then
         begin
@@ -861,7 +877,7 @@ begin
         else
         begin
           // BƯỚC 3: Kiểm tra byte cuối (index = SPI_NAND_PAGE_SIZE - 1)
-          LastByte := DataChunk[SPI_NAND_PAGE_SIZE - 1];
+          LastByte := DataChunk[StrToInt(MainForm.ComboPageSize.Text) - 1];
           if LastByte <> $FF then
           begin
             SkipPage := False; // Nếu byte cuối không phải $FF -> ghi
@@ -882,7 +898,7 @@ begin
             // Nếu vẫn là True, tiếp tục kiểm tra từ byte sau byte giữa đến byte trước byte cuối
             if SkipPage then
             begin
-              for i := PageIndex + 1 to SPI_NAND_PAGE_SIZE - 2 do
+              for i := PageIndex + 1 to StrToInt(MainForm.ComboPageSize.Text) - 2 do
               begin
                 if DataChunk[i] <> $FF then
                 begin
@@ -902,16 +918,16 @@ begin
       // Ghi cả page + spare area (thường spare area được fill 0 hoặc giữ nguyên, nhưng ghi theo page size cũng được nếu chip hỗ trợ)
       // if UsbAsp25NAND_WritePage(PageAddr, DataChunk, SPI_NAND_TOTAL_PAGE_SIZE) <> SPI_NAND_TOTAL_PAGE_SIZE then // Ghi cả page + spare
       // Chỉ ghi phần page size, spare area sẽ do chip xử lý
-      if UsbAsp25NAND_WritePage(PageAddr, DataChunk, SPI_NAND_PAGE_SIZE) <> SPI_NAND_PAGE_SIZE then // Ghi phần page size
+      if UsbAsp25NAND_WritePage(PageAddr, DataChunk, StrToInt(MainForm.ComboPageSize.Text),SPI_NAND_TOTAL_PAGE_SIZE) <> StrToInt(MainForm.ComboPageSize.Text) then // Ghi phần page size RomStream.ReadBuffer(DataChunk[0], StrToInt(MainForm.ComboPageSize.Text));   //     | mảng động  | mảng tĩnh dùng chung
       begin
         LogPrint('Error writing page ' + IntToStr(PageAddr));
         Break; // Hoặc Exit;
       end;
-      Inc(BytesWrite, SPI_NAND_PAGE_SIZE); // Ghi bao nhiêu byte vào chip (phần page size)
+      Inc(BytesWrite, StrToInt(MainForm.ComboPageSize.Text)); // Ghi bao nhiêu byte vào chip (phần page size)
     end
     else
     begin
-      Inc(BytesWrite, SPI_NAND_PAGE_SIZE); // Vẫn tăng byte đã ghi nếu bỏ qua trang
+      Inc(BytesWrite, StrToInt(MainForm.ComboPageSize.Text)); // Vẫn tăng byte đã ghi nếu bỏ qua trang
     end;
 
     MainForm.ProgressBar.Position := PageAddr + 1; // Cập nhật theo trang
@@ -1314,14 +1330,14 @@ begin
   else if ASProgrammer.Current_HW = CHW_CH347 then
     ChunkSize := SizeOf(DataChunk) // 65534
   else
-    ChunkSize := SPI_NAND_PAGE_SIZE; // Gợi ý: đọc từng trang
+    ChunkSize := StrToInt(MainForm.ComboPageSize.Text); // Gợi ý: đọc từng trang
 
   if ChunkSize > ChipSize then ChunkSize := ChipSize;
 
   LogPrint('Reading SPI NAND Flash');
   BytesRead := 0;
   Address := StartAddress; // Đây là số trang bắt đầu nếu ChunkSize là 1 trang
-  PageCount := ChipSize div SPI_NAND_PAGE_SIZE; // Tổng số trang
+  PageCount := ChipSize div StrToInt(MainForm.ComboPageSize.Text); // Tổng số trang
   MainForm.ProgressBar.Max := PageCount; // Cập nhật thanh tiến trình theo trang
 
   RomStream.Clear;
@@ -1330,14 +1346,14 @@ begin
   for PageAddr := 0 to PageCount - 1 do
   begin
     // Gọi hàm từ spi25NAND.pas để đọc 1 trang
-    if UsbAsp25NAND_ReadPage(PageAddr, DataChunk, SPI_NAND_PAGE_SIZE) <> SPI_NAND_PAGE_SIZE then
+    if UsbAsp25NAND_ReadPage(PageAddr, DataChunk, StrToInt(MainForm.ComboPageSize.Text)) <> StrToInt(MainForm.ComboPageSize.Text) then
     begin
       LogPrint('Error reading page ' + IntToStr(PageAddr));
       Break; // Hoặc Exit;
     end;
 
-    RomStream.WriteBuffer(DataChunk, SPI_NAND_PAGE_SIZE);
-    Inc(BytesRead, SPI_NAND_PAGE_SIZE);
+    RomStream.WriteBuffer(DataChunk, StrToInt(MainForm.ComboPageSize.Text));
+    Inc(BytesRead, StrToInt(MainForm.ComboPageSize.Text));
 
     MainForm.ProgressBar.Position := PageAddr + 1; // Cập nhật theo trang
     Application.ProcessMessages;
@@ -1561,9 +1577,12 @@ end;
 // Cập nhật lại hàm VerifyFlash25NAND
 procedure VerifyFlash25NAND(var RomStream: TMemoryStream; StartAddress, DataSize: cardinal);
 var
+  SPI_NAND_TOTAL_PAGE_SIZE: integer;
+  //DataChunk: array[0..SPI_NAND_TOTAL_PAGE_SIZE - 1] of byte; // Dùng kích thước trang + spare    | khi SPI_NAND_TOTAL_PAGE_SIZE được set trong spi25nand    | mảng tĩnh
+  //DataChunkFile: array[0..SPI_NAND_TOTAL_PAGE_SIZE - 1] of byte; // Dùng kích thước trang + spare    | khi SPI_NAND_TOTAL_PAGE_SIZE được set trong spi25nand   | mảng tĩnh
+  DataChunk: array of byte; // Dùng kích thước trang + spare      | mảng động
+  DataChunkFile: array of byte; // Dùng kích thước trang + spare   | mảng động
   BytesRead, i: integer;
-  DataChunk: array[0..SPI_NAND_TOTAL_PAGE_SIZE - 1] of byte; // Dùng kích thước trang + spare
-  DataChunkFile: array[0..SPI_NAND_TOTAL_PAGE_SIZE - 1] of byte; // Dùng kích thước trang + spare
   // Address: cardinal; // Không còn đúng ý nghĩa như trước
   PageAddr: cardinal;
   PageCount: cardinal;
@@ -1578,12 +1597,17 @@ begin
     exit;
   end;
 
+  SPI_NAND_TOTAL_PAGE_SIZE := (StrToInt(MainForm.ComboPageSize.Text) + StrToInt(MainForm.ComboPageSpareSize.Text));  // page size + spare size 2112 bytes
+
+  SetLength(DataChunk, SPI_NAND_TOTAL_PAGE_SIZE); // Khởi tạo mảng đúng cách            | mảng động
+  SetLength(DataChunkFile, SPI_NAND_TOTAL_PAGE_SIZE); // Khởi tạo mảng đúng cách        | mảng động
+
   LogPrint('Verifying SPI NAND Flash (from address: ' + IntToHex(StartAddress, 8) + ', size: ' + IntToStr(DataSize) + ' bytes)');
 
   BytesRead := 0;
   // PageAddr := StartAddress; // Không còn đúng ý nghĩa như trước
-  PageCount := DataSize div SPI_NAND_PAGE_SIZE; // Số trang cần kiểm tra
-  if (DataSize mod SPI_NAND_PAGE_SIZE) > 0 then Inc(PageCount); // Nếu có phần dư, thêm 1 trang
+  PageCount := DataSize div StrToInt(MainForm.ComboPageSize.Text); // Số trang cần kiểm tra
+  if (DataSize mod StrToInt(MainForm.ComboPageSize.Text)) > 0 then Inc(PageCount); // Nếu có phần dư, thêm 1 trang
   MainForm.ProgressBar.Max := PageCount; // Cập nhật thanh tiến trình theo trang
 
   // Tính FileOffset ban đầu trong RomStream tương ứng với StartAddress
@@ -1593,10 +1617,11 @@ begin
   CurrentFileOffset := FileOffset; // Vị trí đọc hiện tại trong RomStream
 
   // Vòng lặp kiểm tra từng trang, bắt đầu từ trang tương ứng với StartAddress
-  for PageAddr := (StartAddress div SPI_NAND_PAGE_SIZE) to ((StartAddress + DataSize - 1) div SPI_NAND_PAGE_SIZE) do // Vòng lặp qua các trang vật lý
+  for PageAddr := (StartAddress div StrToInt(MainForm.ComboPageSize.Text)) to ((StartAddress + DataSize - 1) div StrToInt(MainForm.ComboPageSize.Text)) do // Vòng lặp qua các trang vật lý
   begin
     // Gọi hàm từ spi25NAND.pas để đọc 1 trang từ chip (trang PageAddr)
-    if UsbAsp25NAND_ReadPage(PageAddr, DataChunk, SPI_NAND_TOTAL_PAGE_SIZE) <> SPI_NAND_TOTAL_PAGE_SIZE then // Đọc cả page + spare
+    //if UsbAsp25NAND_ReadPage(PageAddr, DataChunk, SPI_NAND_TOTAL_PAGE_SIZE) <> SPI_NAND_TOTAL_PAGE_SIZE then // Đọc cả page + spare  | mảng tĩnh
+    if UsbAsp25NAND_ReadPage(PageAddr, DataChunk[0], SPI_NAND_TOTAL_PAGE_SIZE) <> SPI_NAND_TOTAL_PAGE_SIZE then // Đọc cả page + spare  | mảng động
     begin
       LogPrint('Error reading page ' + IntToStr(PageAddr) + ' for verification');
       Break; // Hoặc Exit;
@@ -1607,17 +1632,29 @@ begin
     // Cần xác định số byte thực tế cần đọc từ RomStream cho trang này
     // Nếu trang này nằm hoàn toàn trong phạm vi DataSize thì đọc SPI_NAND_PAGE_SIZE
     // Nếu trang này vượt quá DataSize thì chỉ đọc phần còn lại
-    BytesToReadFromStream := SPI_NAND_PAGE_SIZE; // <-- Gán giá trị, không dùng var
-    if (CurrentFileOffset + SPI_NAND_PAGE_SIZE) > (FileOffset + DataSize) then
+    BytesToReadFromStream := StrToInt(MainForm.ComboPageSize.Text); // <-- Gán giá trị, không dùng var
+    if (CurrentFileOffset + StrToInt(MainForm.ComboPageSize.Text)) > (FileOffset + DataSize) then
       BytesToReadFromStream := (FileOffset + DataSize) - CurrentFileOffset; // Phần còn lại cần xác minh
 
     if BytesToReadFromStream > 0 then
     begin
-      RomStream.ReadBuffer(DataChunkFile, BytesToReadFromStream); // Đọc phần cần thiết từ RomStream
+      //RomStream.ReadBuffer(DataChunkFile[0], BytesToReadFromStream); // Đọc phần cần thiết từ RomStream   | mảng tĩnh
+      RomStream.ReadBuffer(DataChunkFile[0], BytesToReadFromStream); // Đọc phần cần thiết từ RomStream   | mảng động
 
       // So sánh dữ liệu trong phần đã đọc từ RomStream với phần tương ứng trong dữ liệu từ chip
       for i := 0 to integer(BytesToReadFromStream) - 1 do
       begin
+
+        // Kiểm tra thêm để đảm bảo i không vượt quá giới hạn của cả hai mảng
+        // Điều này nên là dư thừa nếu logic phía trên đúng, nhưng giúp debug
+        if (i >= Length(DataChunk)) or (i >= Length(DataChunkFile)) then
+        begin
+          LogPrint('Internal error: Index out of bounds during verification. i=' + IntToStr(i) + ', DataChunk length=' + IntToStr(Length(DataChunk)) + ', DataChunkFile length=' + IntToStr(Length(DataChunkFile)));
+          MainForm.ProgressBar.Position := 0;
+          Exit; // Thoát để tránh lỗi
+        end;
+
+
         // Địa chỉ lỗi tính theo byte trên chip
         ErrorAddress := CurrentFileOffset + i; // <-- Gán giá trị, không dùng var
         if DataChunk[i] <> DataChunkFile[i] then
@@ -1632,9 +1669,9 @@ begin
     // else: Trang này nằm ngoài phạm vi DataSize cần xác minh, có thể bỏ qua hoặc kiểm tra phần còn lại của chip là $FF nếu cần
 
     // Cập nhật vị trí đọc cho lần lặp tiếp theo
-    Inc(CurrentFileOffset, SPI_NAND_PAGE_SIZE);
+    Inc(CurrentFileOffset, StrToInt(MainForm.ComboPageSize.Text));
 
-    MainForm.ProgressBar.Position := (PageAddr - (StartAddress div SPI_NAND_PAGE_SIZE)) + 1; // Cập nhật theo trang trong phạm vi xác minh
+    MainForm.ProgressBar.Position := (PageAddr - (StartAddress div StrToInt(MainForm.ComboPageSize.Text))) + 1; // Cập nhật theo trang trong phạm vi xác minh
     Application.ProcessMessages;
     if UserCancel then Break;
   end;
@@ -2328,8 +2365,17 @@ end;
 
 procedure TMainForm.MenuItemEditSregClick(Sender: TObject);
 begin
-  if MainForm.ComboSPICMD.ItemIndex = SPI_CMD_25 then
-    sregedit.sregeditForm.Show;
+  // Kiểm tra cả SPI_CMD_25 (NOR) và SPI_CMD_25_NAND
+  if (MainForm.ComboSPICMD.ItemIndex = SPI_CMD_25) or
+     (MainForm.ComboSPICMD.ItemIndex = SPI_CMD_25_NAND) then
+  begin
+    sregedit.sregeditForm.Show; // Mở form, logic trong sregeditForm sẽ xử lý UI
+  end
+  else
+  begin
+    // (Tùy chọn) Hiển thị thông báo nếu chức năng không hỗ trợ cho loại chip hiện tại
+    // LogPrint('SREG/Feature Register Editor is not supported for this chip type.');
+  end;
 end;
 
 procedure TMainForm.MenuItemLockFlashClick(Sender: TObject);
@@ -2390,45 +2436,101 @@ end;
 
 end;
 
+
+// Thêm hằng số SPI_CMD_25_NAND vào phần const nếu chưa có
+// const
+//   ...
+//   SPI_CMD_25_NAND        = 4; // hoặc giá trị phù hợp với thứ tự trong ComboSPICMD
+
+// Cập nhật hàm MenuItemReadSregClick
 procedure TMainForm.MenuItemReadSregClick(Sender: TObject);
 var
   sreg, sreg2, sreg3: byte;
+  UsedSPICmd: byte; // Biến để theo dõi loại SPI đang sử dụng
 begin
+  UsedSPICmd := 255; // Khởi tạo giá trị mặc định không hợp lệ
   try
-  ButtonCancel.Tag := 0;
-  if not OpenDevice() then exit;
-  sreg:= 0;
-  LockControl();
-  EnterProgMode25(SetSPISpeed(0), MainForm.MenuSendAB.Checked);
+    ButtonCancel.Tag := 0;
+    if not OpenDevice() then exit;
+    sreg:= 0;
+    LockControl();
 
-  if ComboSPICMD.ItemIndex = SPI_CMD_25 then
-  begin
-    UsbAsp25_ReadSR(sreg); //Читаем регистр
-    UsbAsp25_ReadSR(sreg2, $35); //Второй байт
-    UsbAsp25_ReadSR(sreg3, $15); //Третий байт
-    LogPrint('Sreg: '+IntToBin(sreg, 8)+'(0x'+(IntToHex(sreg, 2)+'), ')
-                                         +IntToBin(sreg2, 8)+'(0x'+(IntToHex(sreg2, 2)+'), ')
-                                         +IntToBin(sreg3, 8)+'(0x'+(IntToHex(sreg3, 2)+')'));
+    // Ghi lại loại chip đang sử dụng để dùng trong finally
+    UsedSPICmd := ComboSPICMD.ItemIndex;
+
+    // Vào chế độ lập trình dựa trên loại chip được chọn
+    if ComboSPICMD.ItemIndex = SPI_CMD_KB then
+      EnterProgMode25(SetSPISpeed(0), MainForm.MenuSendAB.Checked) // KB có thể dùng logic 25?
+    else if ComboSPICMD.ItemIndex = SPI_CMD_25_NAND then
+      EnterProgMode25NAND(SetSPISpeed(0)) // Gọi hàm NAND
+    else // SPI_CMD_25, SPI_CMD_45, SPI_CMD_95
+      EnterProgMode25(SetSPISpeed(0), MainForm.MenuSendAB.Checked);
+
+    if ComboSPICMD.ItemIndex = SPI_CMD_25 then
+    begin
+      UsbAsp25_ReadSR(sreg); //Читаем регистр
+      UsbAsp25_ReadSR(sreg2, $35); //Второй байт
+      UsbAsp25_ReadSR(sreg3, $15); //Третий байт
+      LogPrint('Sreg: '+IntToBin(sreg, 8)+'(0x'+(IntToHex(sreg, 2)+'), ')
+                                           +IntToBin(sreg2, 8)+'(0x'+(IntToHex(sreg2, 2)+'), ')
+                                           +IntToBin(sreg3, 8)+'(0x'+(IntToHex(sreg3, 2)+')'));
+    end
+    else if ComboSPICMD.ItemIndex = SPI_CMD_25_NAND then // Thêm nhánh cho NAND
+    begin
+      // SPI NAND sử dụng các thanh ghi Feature Register khác nhau
+      // Đọc các thanh ghi chính: Status, Protection, Config
+      // Giả sử các hằng số SPI_NAND_FEATURE_STATUS, SPI_NAND_FEATURE_PROTECTION, SPI_NAND_FEATURE_CONFIG
+      // đã được định nghĩa trong spi25NAND.pas
+
+      // Đọc Status Register (Feature Address $C0)
+      if UsbAsp25NAND_ReadStatus(sreg, SPI_NAND_FEATURE_STATUS) < 0 then
+      begin
+        LogPrint('Error reading SPI NAND Status Register.');
+        Exit; // hoặc tiếp tục đọc các thanh ghi khác nếu muốn
+      end;
+
+      // Đọc Protection Register (Feature Address $A0)
+      if UsbAsp25NAND_ReadStatus(sreg2, SPI_NAND_FEATURE_PROTECTION) < 0 then
+      begin
+        LogPrint('Error reading SPI NAND Protection Register.');
+        // Có thể tiếp tục hoặc Exit
+        sreg2 := $FF; // Gán giá trị mặc định nếu lỗi
+      end;
+
+      // Đọc Config Register (Feature Address $B0) - có thể chứa ECC enable và các bit khác
+      if UsbAsp25NAND_ReadStatus(sreg3, SPI_NAND_FEATURE_CONFIG) < 0 then
+      begin
+        LogPrint('Error reading SPI NAND Config Register.');
+        // Có thể tiếp tục hoặc Exit
+        sreg3 := $FF; // Gán giá trị mặc định nếu lỗi
+      end;
+
+      LogPrint('SPI NAND Sreg (Status $C0): '+IntToBin(sreg, 8)+'(0x'+(IntToHex(sreg, 2)+'), ')
+                                           +'Protection $A0: '+IntToBin(sreg2, 8)+'(0x'+(IntToHex(sreg2, 2)+'), ')
+                                           +'Config $B0: '+IntToBin(sreg3, 8)+'(0x'+(IntToHex(sreg3, 2)+')'));
+    end
+    else if ComboSPICMD.ItemIndex = SPI_CMD_95 then
+    begin
+      UsbAsp95_ReadSR(sreg); //Читаем регистр
+      LogPrint('Sreg: '+IntToBin(sreg, 8));
+    end
+    else if ComboSPICMD.ItemIndex = SPI_CMD_45 then
+    begin
+      UsbAsp45_ReadSR(sreg); //Читаем регистр
+      LogPrint('Sreg: '+IntToBin(sreg, 8));
+    end;
+
+  finally
+    // Gọi hàm ExitProgMode phù hợp dựa trên loại chip đã sử dụng
+    if UsedSPICmd = SPI_CMD_25_NAND then
+      ExitProgMode25NAND // Gọi hàm NAND
+    else if UsedSPICmd in [SPI_CMD_25, SPI_CMD_45, SPI_CMD_95, SPI_CMD_KB] then // Các loại khác dùng 25
+      ExitProgMode25; // Gọi hàm NOR
+    // I2C và MW có logic riêng, không cần kiểm tra UsedSPICmd
+
+    AsProgrammer.Programmer.DevClose;
+    UnlockControl();
   end;
-
-  if ComboSPICMD.ItemIndex = SPI_CMD_95 then
-  begin
-    UsbAsp95_ReadSR(sreg); //Читаем регистр
-    LogPrint('Sreg: '+IntToBin(sreg, 8));
-  end;
-
-  if ComboSPICMD.ItemIndex = SPI_CMD_45 then
-  begin
-    UsbAsp45_ReadSR(sreg); //Читаем регистр
-    LogPrint('Sreg: '+IntToBin(sreg, 8));
-  end;
-
-finally
-  ExitProgMode25;
-  AsProgrammer.Programmer.DevClose;
-  UnlockControl();
-end;
-
 end;
 
 procedure TMainForm.RadioI2CChange(Sender: TObject);
@@ -2439,6 +2541,8 @@ begin
   ComboPageSize.Visible       := True;
   Label5.Visible              := False;
   LabelSPICMD.Visible         := False;
+  LabelSpare.Visible          := False;
+  ComboPageSpareSize.Visible  := False;
   ButtonReadID.Enabled        := False;
   ButtonBlock.Enabled         := False;
   ButtonErase.Enabled         := True;
@@ -2450,6 +2554,7 @@ begin
   ComboAddrType.Text:= '';
   ComboPageSize.Text:= 'Page size';
   ComboChipSize.Text:= 'Chip size';
+  ComboPageSparesize.Text := 'Spare size';
 end;
 
 procedure TMainForm.RadioMwChange(Sender: TObject);
@@ -2472,6 +2577,7 @@ begin
   ComboAddrType.Text:= '';
   ComboPageSize.Text:= 'Page size';
   ComboChipSize.Text:= 'Chip size';
+  ComboPageSparesize.Text := 'Spare size';
 end;
 
 procedure TMainForm.RadioSPIChange(Sender: TObject);
@@ -2482,6 +2588,8 @@ begin
   LabelSPICMD.Visible         := True;
   ComboPageSize.Visible       := True;
   ComboSPICMD.Visible         := True;
+  LabelSpare.Visible          := True;
+  ComboPageSpareSize.Visible  := True;
 
   ButtonErase.Enabled         := True;
   ButtonReadID.Enabled        := True;
@@ -2514,6 +2622,7 @@ begin
   ComboAddrType.Text:= '';
   ComboPageSize.Text:= 'Page size';
   ComboChipSize.Text:= 'Chip size';
+  ComboPageSparesize.Text := 'Spare size';
 end;
 
 
@@ -3545,7 +3654,7 @@ begin
       begin
         // SPI NAND thường không có lệnh xóa chip đơn lẻ, nên xóa từng block
         // Gọi hàm xóa chip từ spi25NAND.pas (giả sử hàm này đã được cập nhật để xóa toàn chip)
-        if UsbAsp25NAND_ChipErase() = 0 then // Giả sử trả về 0 là thành công
+        if UsbAsp25NAND_ChipErase(StrToInt(MainForm.ComboPageSize.Text)) = 0 then // Giả sử trả về 0 là thành công
         begin
           LogPrint(STR_DONE);
           // Có thể không cần vòng lặp busy như NOR, hoặc cần theo dõi theo block

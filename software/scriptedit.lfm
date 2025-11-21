@@ -1,21 +1,21 @@
 object ScriptEditForm: TScriptEditForm
-  Left = 433
+  Left = 1093
   Height = 422
-  Top = 144
+  Top = 321
   Width = 727
   ActiveControl = SynEdit
   Caption = 'Script editor'
-  ClientHeight = 402
+  ClientHeight = 422
   ClientWidth = 727
   Menu = MainMenu
+  Position = poOwnerFormCenter
+  LCLVersion = '4.4.0.0'
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnShow = FormShow
-  Position = poOwnerFormCenter
-  LCLVersion = '2.0.2.0'
   inline SynEdit: TSynEdit
     Left = 0
-    Height = 324
+    Height = 344
     Top = 0
     Width = 727
     Align = alClient
@@ -490,6 +490,9 @@ object ScriptEditForm: TScriptEditForm
         MouseActions = <>
         ModifiedColor = 59900
         SavedColor = clGreen
+        MarkupInfo.Background = clNone
+        MarkupInfo.Foreground = clGreen
+        MarkupInfo.FrameColor = 59900
       end
       object SynGutterSeparator1: TSynGutterSeparator
         Width = 2
@@ -509,7 +512,7 @@ object ScriptEditForm: TScriptEditForm
   object ScriptEditLog: TMemo
     Left = 0
     Height = 78
-    Top = 324
+    Top = 344
     Width = 727
     Align = alBottom
     HideSelection = False
@@ -527,35 +530,37 @@ object ScriptEditForm: TScriptEditForm
     DirectiveAttri.Style = []
     CompilerMode = pcmDelphi
     NestedComments = False
-    left = 64
-    top = 8
+    TypeHelpers = True
+    StringMultilineMode = []
+    Left = 64
+    Top = 8
   end
   object MainMenu: TMainMenu
-    left = 64
-    top = 64
+    Left = 64
+    Top = 64
     object MenuItemFile: TMenuItem
-      Caption = 'Файл'
+      Caption = 'File'
       object MenuItemOpen: TMenuItem
-        Caption = 'Открыть'
+        Caption = 'Open'
         OnClick = MenuItemOpenClick
       end
       object MenuItemSave: TMenuItem
-        Caption = 'Сохранить'
+        Caption = 'Save'
         ShortCut = 16467
         OnClick = MenuItemSaveClick
       end
       object MenuItemSaveAs: TMenuItem
-        Caption = 'Сохранить как...'
+        Caption = 'Save as...'
         OnClick = MenuItemSaveAsClick
       end
     end
     object MenuItemRun: TMenuItem
-      Caption = 'Выполнить'
+      Caption = 'Execute'
       ShortCut = 120
       OnClick = MenuItemRunClick
     end
     object MenuItemSection: TMenuItem
-      Caption = 'Секция ='
+      Caption = 'Section ='
       OnClick = MenuItemSectionClick
     end
     object MenuItemScetionName: TMenuItem
@@ -563,12 +568,12 @@ object ScriptEditForm: TScriptEditForm
   end
   object OpenDialog: TOpenDialog
     Filter = '*.pas|*.pas|*.*|*.*'
-    left = 112
-    top = 8
+    Left = 112
+    Top = 8
   end
   object SaveDialog: TSaveDialog
     Filter = '*.pas|*.pas|*.*|*.*'
-    left = 160
-    top = 8
+    Left = 160
+    Top = 8
   end
 end

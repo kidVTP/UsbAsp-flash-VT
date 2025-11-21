@@ -8,7 +8,7 @@ uses
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, main, i2c, microwire,
-  spi95, search, sregedit, findchip, ScriptEdit, spi25;
+  spi95, search, sregedit, findchip, ScriptEdit, spi25, spi25nand;
 
 {$R *.res}
 

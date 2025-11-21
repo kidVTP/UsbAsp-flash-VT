@@ -4,7 +4,7 @@ object ChipSearchForm: TChipSearchForm
   Top = 226
   Width = 250
   BorderStyle = bsToolWindow
-  Caption = 'Поиск микросхемы'
+  Caption = 'Find IC'
   ClientHeight = 360
   ClientWidth = 250
   Position = poMainFormCenter
@@ -38,7 +38,7 @@ object ChipSearchForm: TChipSearchForm
     Height = 15
     Top = 9
     Width = 128
-    Caption = 'Маркировка содержит:'
+    Caption = 'IC мarking contains:'
     ParentColor = False
   end
   object ChipSearchSelectButton: TButton
@@ -46,7 +46,7 @@ object ChipSearchForm: TChipSearchForm
     Height = 25
     Top = 328
     Width = 234
-    Caption = 'Выбрать микросхему'
+    Caption = 'Select IC'
     OnClick = ChipSearchSelectButtonClick
     TabOrder = 2
   end

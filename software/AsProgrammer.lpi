@@ -40,7 +40,7 @@
           <Version Value="11"/>
           <PathDelim Value="\"/>
           <Target>
-            <Filename Value="AsProgrammer"/>
+            <Filename Value="out\AsProgrammer"/>
           </Target>
           <SearchPaths>
             <IncludeFiles Value="$(ProjOutDir);JediInc"/>
@@ -64,6 +64,7 @@
           </CodeGeneration>
           <Linking>
             <Debugging>
+              <DebugInfoType Value="dsDwarf3"/>
               <UseHeaptrc Value="True"/>
             </Debugging>
             <Options>
@@ -102,7 +103,7 @@
         <PackageName Value="LCL"/>
       </Item4>
     </RequiredPackages>
-    <Units Count="12">
+    <Units Count="14">
       <Unit0>
         <Filename Value="AsProgrammer.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -164,7 +165,23 @@
         <Filename Value="avrisphw.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit11>
+      <Unit12>
+        <Filename Value="spi25nand.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="findchip.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="ChipSearchForm"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit13>
     </Units>
+    <Debugger>
+      <DisplayFormatConfigs>
+        <dtfHint NumInherit="False" Num2Inherit="False" Num2.Visible="True"/>
+        <dtfLocals NumInherit="False" Num2Inherit="False" Num2.Visible="True"/>
+      </DisplayFormatConfigs>
+    </Debugger>
   </ProjectOptions>
   <CompilerOptions>
     <Version Value="11"/>

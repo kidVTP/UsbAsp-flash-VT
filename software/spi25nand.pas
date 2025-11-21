@@ -37,11 +37,11 @@ const
   SPI_NAND_FEATURE_CONFIG = $B0; // Includes ECC enable bit
 
   // Page and Block sizes (example for W25N01GV)
-  SPI_NAND_PAGE_SIZE = 2048; // Standard page data size
-  SPI_NAND_SPARE_SIZE = 64;  // Spare area size
-  SPI_NAND_TOTAL_PAGE_SIZE = SPI_NAND_PAGE_SIZE + SPI_NAND_SPARE_SIZE; // 2112 bytes
-  SPI_NAND_PAGES_PER_BLOCK = 64;
-  SPI_NAND_BLOCK_SIZE = SPI_NAND_PAGES_PER_BLOCK * SPI_NAND_TOTAL_PAGE_SIZE; // 135168 bytes
+  // SPI_NAND_PAGE_SIZE = 2048; // Standard page data size
+  // SPI_NAND_SPARE_SIZE = 64;  // Spare area size
+  // SPI_NAND_TOTAL_PAGE_SIZE = SPI_NAND_PAGE_SIZE + SPI_NAND_SPARE_SIZE; // 2112 bytes
+   SPI_NAND_PAGES_PER_BLOCK = 64;
+  // SPI_NAND_BLOCK_SIZE = SPI_NAND_PAGES_PER_BLOCK * SPI_NAND_TOTAL_PAGE_SIZE; // 135168 bytes
 
 type
   MEMORY_ID_NAND = record
@@ -62,11 +62,11 @@ function UsbAsp25NAND_ReadID(var ID: MEMORY_ID_NAND): integer;
 // Đọc một trang vào cache, sau đó đọc dữ liệu từ cache
 function UsbAsp25NAND_ReadPage(PageAddr: longword; var buffer: array of byte; bufflen: integer): integer;
 // Ghi dữ liệu vào cache, sau đó thực thi ghi vào flash
-function UsbAsp25NAND_WritePage(PageAddr: longword; buffer: array of byte; bufflen: integer): integer;
+function UsbAsp25NAND_WritePage(PageAddr: longword; buffer: array of byte; bufflen: integer; spi_nand_total_page_size: integer ): integer;
 // Xóa một block
 function UsbAsp25NAND_EraseBlock(BlockAddr: longword): integer;
 // Xóa toàn chip
-function UsbAsp25NAND_ChipErase(): integer;
+function UsbAsp25NAND_ChipErase(spi_nand_page_size: integer): integer;
 
 // Đọc thanh ghi trạng thái
 function UsbAsp25NAND_ReadStatus(var sreg: byte; FeatureAddr: byte = SPI_NAND_FEATURE_STATUS): integer; 
@@ -187,8 +187,8 @@ begin
   move(buffer, ID.ID9FH, 3);
   Result := 3; // Trả về số byte đã đọc
   
-  LogPrint('SPI_NAND_TOTAL_PAGE_SIZE ' + IntToStr(SPI_NAND_TOTAL_PAGE_SIZE) + ' bytes');
-  LogPrint('SPI_NAND_BLOCK_SIZE ' + IntToStr(SPI_NAND_BLOCK_SIZE) + ' bytes');
+  // LogPrint('SPI_NAND_TOTAL_PAGE_SIZE ' + IntToStr(SPI_NAND_TOTAL_PAGE_SIZE) + ' bytes');
+  // LogPrint('SPI_NAND_BLOCK_SIZE ' + IntToStr(SPI_NAND_BLOCK_SIZE) + ' bytes');
   //LogPrint('SPI NAND ID Read: ' + IntToHex(ID.ID9FH[0], 2) + ' ' + IntToHex(ID.ID9FH[1], 2) + ' ' + IntToHex(ID.ID9FH[2], 2));
 end;
 
@@ -201,10 +201,12 @@ var
 begin
   Result := -1; // Mặc định là lỗi
 
+  // LogPrint('bufflen ' + IntToStr(bufflen) );
   // Giới hạn số byte đọc theo kích thước buffer đầu vào
   bytes_to_read := bufflen;
-  if bytes_to_read > SPI_NAND_TOTAL_PAGE_SIZE then
-    bytes_to_read := SPI_NAND_TOTAL_PAGE_SIZE;
+  // if bytes_to_read > SPI_NAND_TOTAL_PAGE_SIZE then
+  //   bytes_to_read := SPI_NAND_TOTAL_PAGE_SIZE;
+  
 
   // 1. Gửi lệnh Load Page vào Cache
   cmd_buff[0] := SPI_NAND_CMD_READ_PAGE;
@@ -247,7 +249,7 @@ begin
   // LogPrint('Read Page ' + IntToStr(PageAddr) + ': ' + IntToStr(Result) + ' bytes');
 end;
 
-function UsbAsp25NAND_WritePage(PageAddr: longword; buffer: array of byte; bufflen: integer): integer;
+function UsbAsp25NAND_WritePage(PageAddr: longword; buffer: array of byte; bufflen: integer; spi_nand_total_page_size: integer): integer;
 var
   cmd_buff: array[0..3] of byte;
   addr_bytes: array[0..2] of byte;
@@ -258,8 +260,8 @@ begin
 
   // Giới hạn số byte ghi theo kích thước buffer đầu vào và kích thước trang
   bytes_to_write := bufflen;
-  if bytes_to_write > SPI_NAND_TOTAL_PAGE_SIZE then
-    bytes_to_write := SPI_NAND_TOTAL_PAGE_SIZE;
+  if bytes_to_write > spi_nand_total_page_size then
+    bytes_to_write := spi_nand_total_page_size;
 
   // 1. Gửi lệnh Write Enable
   // SỬA DÒNG NÀY: Gọi AsProgrammer.Programmer.SPIWrite trực tiếp với mảng inline
@@ -346,7 +348,7 @@ begin
   // LogPrint('Erase Block ' + IntToStr(BlockAddr) + ': Success');
 end;
 
-function UsbAsp25NAND_ChipErase(): integer;
+function UsbAsp25NAND_ChipErase(spi_nand_page_size: integer): integer;
 var
   //sreg: byte;
   BlockAddr: longword;
@@ -358,14 +360,14 @@ begin
 
   // Tính số block cần xóa (dựa trên _IC_Size nếu có, hoặc kích thước chip)
   // Giả sử _IC_Size là tổng dung lượng, _IC_Page là kích thước trang (2048)
-  if (CurrentICParam.Size > 0) and (CurrentICParam.Page = SPI_NAND_PAGE_SIZE) then
+  if (CurrentICParam.Size > 0) and (CurrentICParam.Page = spi_nand_page_size) then
   begin
-    MaxBlocks := (CurrentICParam.Size div SPI_NAND_PAGE_SIZE) div SPI_NAND_PAGES_PER_BLOCK;
+    MaxBlocks := (CurrentICParam.Size div spi_nand_page_size) div SPI_NAND_PAGES_PER_BLOCK;
   end
   else
   begin
     // Fallback: giả sử chip 1GB (W25N01GV)
-    MaxBlocks := (1024 * 1024 * 1024 div SPI_NAND_PAGE_SIZE) div SPI_NAND_PAGES_PER_BLOCK; // 1024 blocks
+    MaxBlocks := (1024 * 1024 * 1024 div spi_nand_page_size) div SPI_NAND_PAGES_PER_BLOCK; // 1024 blocks
   end;
 
   LogPrint('Chip Erase: Calculated ' + IntToStr(MaxBlocks) + ' blocks to erase.');
