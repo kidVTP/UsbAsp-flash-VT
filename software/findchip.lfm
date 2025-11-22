@@ -8,24 +8,24 @@ object ChipSearchForm: TChipSearchForm
   ClientHeight = 360
   ClientWidth = 250
   Position = poMainFormCenter
-  LCLVersion = '2.0.2.0'
+  LCLVersion = '4.4.0.0'
   object ListBoxChips: TListBox
     Left = 8
     Height = 264
     Top = 56
     Width = 234
     ItemHeight = 0
-    OnDblClick = ListBoxChipsDblClick
     Sorted = True
     TabOrder = 0
+    OnDblClick = ListBoxChipsDblClick
   end
   object EditSearch: TEdit
     Left = 14
     Height = 23
     Top = 24
     Width = 222
-    OnChange = EditSearchChange
     TabOrder = 1
+    OnChange = EditSearchChange
   end
   object Bevel1: TBevel
     Left = 8
@@ -47,7 +47,7 @@ object ChipSearchForm: TChipSearchForm
     Top = 328
     Width = 234
     Caption = 'Select IC'
-    OnClick = ChipSearchSelectButtonClick
     TabOrder = 2
+    OnClick = ChipSearchSelectButtonClick
   end
 end

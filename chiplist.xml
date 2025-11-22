@@ -5,12 +5,6 @@
   id - индефикатор микросхемы памяти(HEX). Поддерживаются опкоды 9F, 90, AB, 15
   spicmd - команды для серий микросхем памяти 25, 45, 95(EEPROM)
   script - имя файла скрипта из папки scripts  
-  
-  size - memory chip data size in bytes(Decimal)
-  page - memory chip page size in bytes(Decimal). For SST AAI Word programm - SSTW. For SST AAI Byte programm - SSTB. 
-  id - memory chip ID(Hexadecimal). Supported instructions 9F, 90, AB, 15.
-  spicmd - instructions for a series of memory chips 25, 45, 95(EEPROM). If not specified, the default value is 25.
-  script - the name of the script file from the scripts folder .
  -->
 <chiplist>
   <SPI>
@@ -167,11 +161,8 @@
 	  <Pm25LV040 id="7F9D7E" page="256" size="524288"/>
 	</PFLASH>
 	<PUYA>
-	<P25D40SH id="856013" page="256" size="524288"/>
-	<P25D40SH id="854213" page="256" size="524288"/>
     <P25D40H id="856013" page="256" size="524288"/>
 	<P25Q80H id="856014" page="256" size="1048576"/>
-	<P25D80SH id="856014" page="256" size="1048576"/>
   </PUYA>
 	<TERRA>
 	  <TS25L512A id="373010" page="256" size="65536"/>
@@ -872,6 +863,7 @@
       <W25X80V id="EF3014" page="256" size="1048576"/>
 	  <W25M512JV id="EF7119" page="256" size="67108864"/>
 	  <W25R256JV id="EF4019" page="256" size="33554432"/>
+    
     </WINBOND>
     <XICOR>
       <X25010 page="4" size="128" spicmd="95"/>
@@ -974,7 +966,7 @@
       <AT25DF021 id="1F4300" page="256" size="262144"/>
       <AT25DF041 id="1F4400" page="256" size="524288"/>
       <AT25DF041A id="1F4400" page="256" size="524288"/>
-	  <AT25SF041 id="1F8400" page="256" size="524288"/>
+	    <AT25SF041 id="1F8400" page="256" size="524288"/>
       <AT25DF081 id="1F4500" page="256" size="1048576"/>
       <AT25DF081A id="1F4500" page="256" size="1048576"/>
       <AT25DF161 id="1F4600" page="256" size="2097152"/>
@@ -983,7 +975,7 @@
       <AT25DF641 id="1F4800" page="256" size="8388608"/>
       <AT25F512 id="1F65" page="256" size="65536"/>
       <AT25F512A id="1F65" page="128" size="65536"/>
-	  <AT25F512B id="1F6500" page="256" size="65536"/>
+	    <AT25F512B id="1F6500" page="256" size="65536"/>
       <AT25F1024 id="1F60" page="256" size="131072"/>
       <AT25F1024A id="1F60" page="256" size="131072"/>
       <AT25F2048 id="1F63" page="256" size="262144"/>
@@ -1024,6 +1016,16 @@
       <PN25F04A id="E04013" page="256" size="524288"/>
     </Paragon>
   </SPI>
+  <SPI_NAND>
+    <MICRON>
+	    <MT29F2G01ABAGDWB vcc="3.3" id="2C24" page="2048" size="268435456" spare="64" spicmd="25N" planes="2"/>	  
+	    <MT29F2G01ABAGDSF-ECC_OOB vcc="3.3" id="2C24" page="2048" size="268435456" spare="64" spicmd="25N" planes="2"/>
+	    <MT29F2G01ABAGD12 vcc="3.3" id="2C24" page="2048" size="268435456" spare="64" spicmd="25N" planes="2"/>
+    </MICRON>
+    <WINBOND>
+      <W25N01GVZ id="EFAA21" page="2048" size="134217728" spare="64" spicmd="25N"/>
+    </WINBOND>
+  </SPI_NAND>
   <I2C>
     <_24Cxxx>
       <AT24C01 page="1" size="128" addrtype="0"/>

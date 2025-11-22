@@ -173,6 +173,7 @@
         <Filename Value="findchip.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ChipSearchForm"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit13>
     </Units>

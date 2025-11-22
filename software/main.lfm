@@ -1,12 +1,12 @@
 object MainForm: TMainForm
   Left = 847
-  Height = 541
+  Height = 528
   Top = 263
-  Width = 853
+  Width = 827
   ActiveControl = RadioSPI
   Caption = 'AsProgrammer'
-  ClientHeight = 541
-  ClientWidth = 853
+  ClientHeight = 528
+  ClientWidth = 827
   Constraints.MinHeight = 300
   Constraints.MinWidth = 300
   Menu = MainMenu
@@ -18,8 +18,8 @@ object MainForm: TMainForm
   object ProgressBar: TProgressBar
     Left = 0
     Height = 20
-    Top = 426
-    Width = 853
+    Top = 413
+    Width = 827
     Align = alBottom
     Max = 0
     ParentFont = False
@@ -30,7 +30,7 @@ object MainForm: TMainForm
     Left = 0
     Height = 34
     Top = 0
-    Width = 853
+    Width = 827
     ButtonHeight = 32
     ButtonWidth = 32
     Caption = 'ToolBar'
@@ -80,7 +80,7 @@ object MainForm: TMainForm
     end
     object ToolButton1: TToolButton
       Left = 249
-      Height = 32
+      Height = 8
       Top = 2
       Caption = 'ToolButton1'
       Style = tbsSeparator
@@ -108,7 +108,7 @@ object MainForm: TMainForm
     end
     object ToolButton3: TToolButton
       Left = 73
-      Height = 32
+      Height = 8
       Top = 2
       Caption = 'ToolButton3'
       Style = tbsSeparator
@@ -147,7 +147,7 @@ object MainForm: TMainForm
     end
     object ToolButton2: TToolButton
       Left = 341
-      Height = 32
+      Height = 8
       Top = 2
       Caption = 'ToolButton2'
       Style = tbsSeparator
@@ -183,14 +183,14 @@ object MainForm: TMainForm
     end
     object ToolButton5: TToolButton
       Left = 385
-      Height = 32
+      Height = 8
       Top = 2
       Caption = 'ToolButton5'
       Style = tbsSeparator
     end
     object ToolButton4: TToolButton
       Left = 567
-      Height = 32
+      Height = 8
       Top = 2
       Caption = 'ToolButton4'
       Style = tbsSeparator
@@ -198,11 +198,11 @@ object MainForm: TMainForm
   end
   object GroupChipSettings: TGroupBox
     Left = 0
-    Height = 369
+    Height = 356
     Top = 34
     Width = 160
     Align = alLeft
-    ClientHeight = 349
+    ClientHeight = 336
     ClientWidth = 156
     ParentFont = False
     TabOrder = 2
@@ -583,9 +583,9 @@ object MainForm: TMainForm
   object MPHexEditorEx: TMPHexEditorEx
     Cursor = crIBeam
     Left = 160
-    Height = 369
+    Height = 356
     Top = 34
-    Width = 693
+    Width = 667
     CreateBackup = False
     BackupExtension = '.bak'
     SupportsOtherClipFormats = False
@@ -698,8 +698,8 @@ object MainForm: TMainForm
   object StatusBar: TStatusBar
     Left = 0
     Height = 23
-    Top = 403
-    Width = 853
+    Top = 390
+    Width = 827
     Panels = <    
       item
         Width = 120
@@ -721,8 +721,8 @@ object MainForm: TMainForm
   object Log: TMemo
     Left = 0
     Height = 90
-    Top = 451
-    Width = 853
+    Top = 438
+    Width = 827
     Align = alBottom
     Lines.Strings = (
       'AsProgrammer v2.1.1'
@@ -738,8 +738,8 @@ object MainForm: TMainForm
     Cursor = crVSplit
     Left = 0
     Height = 5
-    Top = 446
-    Width = 853
+    Top = 433
+    Width = 827
     Align = alBottom
     Anchors = [akBottom]
     ResizeAnchor = akBottom

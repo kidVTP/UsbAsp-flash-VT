@@ -204,11 +204,21 @@ begin
                  Main.CurrentICParam.Size:= StrToInt(UTF16ToUTF8(ChipNode.Attributes.GetNamedItem('size').NodeValue))
                else
                  Main.CurrentICParam.Size := 0;
-
+                // Thêm dòng này để lấy PagesPerBlock SPI NAND
+               if  ChipNode.Attributes.GetNamedItem('block') <> nil then
+                 Main.CurrentICParam.PagesPerBlock := StrToInt(UTF16ToUTF8(ChipNode.Attributes.GetNamedItem('block').NodeValue))
+               else
+                 Main.CurrentICParam.PagesPerBlock := 64;
+               // Thêm dòng này để lấy Spare size  SPI NAND
                if  ChipNode.Attributes.GetNamedItem('spare') <> nil then
                  Main.CurrentICParam.Spare := StrToInt(UTF16ToUTF8(ChipNode.Attributes.GetNamedItem('spare').NodeValue))
                else
                  Main.CurrentICParam.Spare := 0;
+                 // Thêm dòng này để lấy planes SPI NAND
+               if ChipNode.Attributes.GetNamedItem('planes') <> nil then
+                 Main.CurrentICParam.Planes := StrToInt(UTF16ToUTF8(ChipNode.Attributes.GetNamedItem('planes').NodeValue))
+               else
+                 Main.CurrentICParam.Planes := 1;
 
                if ChipNode.Attributes.GetNamedItem('script') <> nil then
                begin

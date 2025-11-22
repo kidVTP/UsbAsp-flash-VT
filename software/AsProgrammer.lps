@@ -18,8 +18,9 @@
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <TopLine Value="2347"/>
-        <CursorPos X="15" Y="2379"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="2929"/>
+        <CursorPos X="91" Y="2954"/>
         <UsageCount Value="204"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -51,7 +52,6 @@
         <ComponentName Value="sregeditForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="11"/>
         <CursorPos X="55" Y="229"/>
         <UsageCount Value="269"/>
@@ -126,59 +126,61 @@
         <Filename Value="spi25nand.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="16"/>
-        <TopLine Value="337"/>
-        <CursorPos X="7" Y="367"/>
-        <UsageCount Value="50"/>
+        <TopLine Value="108"/>
+        <CursorPos X="10" Y="108"/>
+        <UsageCount Value="71"/>
         <Loaded Value="True"/>
       </Unit12>
       <Unit13>
         <Filename Value="findchip.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="ChipSearchForm"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="146"/>
-        <CursorPos Y="208"/>
-        <UsageCount Value="43"/>
+        <TopLine Value="198"/>
+        <CursorPos Y="125"/>
+        <UsageCount Value="64"/>
         <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit13>
       <Unit14>
         <Filename Value="usbaspmulti.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="9"/>
-        <UsageCount Value="200"/>
+        <UsageCount Value="199"/>
       </Unit14>
       <Unit15>
         <Filename Value="usbaspi2c.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="37"/>
         <CursorPos Y="205"/>
-        <UsageCount Value="184"/>
+        <UsageCount Value="183"/>
       </Unit15>
       <Unit16>
         <Filename Value="usbaspmw.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="15"/>
-        <UsageCount Value="197"/>
+        <UsageCount Value="196"/>
       </Unit16>
       <Unit17>
         <Filename Value="usbasp95.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="42" Y="6"/>
-        <UsageCount Value="285"/>
+        <UsageCount Value="284"/>
       </Unit17>
       <Unit18>
         <Filename Value="ch341mw.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="9" Y="86"/>
-        <UsageCount Value="246"/>
+        <UsageCount Value="245"/>
       </Unit18>
       <Unit19>
         <Filename Value="usbasp25.pas"/>
         <UnitName Value="spi25"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="6"/>
-        <UsageCount Value="30"/>
+        <UsageCount Value="29"/>
       </Unit19>
       <Unit20>
         <Filename Value="LibUSB.pas"/>
@@ -199,20 +201,20 @@
         <UnitName Value="KHexEditor"/>
         <TopLine Value="4002"/>
         <CursorPos X="101" Y="4035"/>
-        <UsageCount Value="31"/>
+        <UsageCount Value="30"/>
       </Unit22>
       <Unit23>
         <Filename Value="C:\lazarusF\4_khexeditor_1.5\source\keditcommon.pas"/>
         <UnitName Value="KEditCommon"/>
         <TopLine Value="339"/>
         <CursorPos X="5" Y="119"/>
-        <UsageCount Value="23"/>
+        <UsageCount Value="22"/>
       </Unit23>
       <Unit24>
         <Filename Value="usbasp45.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="60" Y="8"/>
-        <UsageCount Value="31"/>
+        <UsageCount Value="30"/>
       </Unit24>
       <Unit25>
         <Filename Value="C:\lazarus\lcl\dialogs.pp"/>
@@ -220,7 +222,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="493"/>
         <CursorPos X="20" Y="499"/>
-        <UsageCount Value="117"/>
+        <UsageCount Value="116"/>
       </Unit25>
       <Unit26>
         <Filename Value="usbasphw.pas"/>
@@ -241,7 +243,8 @@
       <Unit28>
         <Filename Value="scriptsfunc.pas"/>
         <EditorIndex Value="5"/>
-        <CursorPos X="28" Y="134"/>
+        <TopLine Value="85"/>
+        <CursorPos X="3" Y="100"/>
         <UsageCount Value="125"/>
         <Loaded Value="True"/>
       </Unit28>
@@ -274,27 +277,27 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="150"/>
         <CursorPos X="14" Y="98"/>
-        <UsageCount Value="119"/>
+        <UsageCount Value="118"/>
       </Unit32>
       <Unit33>
         <Filename Value="avrispmk2.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="51"/>
         <CursorPos X="118" Y="243"/>
-        <UsageCount Value="42"/>
+        <UsageCount Value="41"/>
       </Unit33>
       <Unit34>
         <Filename Value="..\..\UsbAsp-flash\software\usbasp25.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="86"/>
-        <UsageCount Value="1"/>
+        <UsageCount Value="10"/>
       </Unit34>
       <Unit35>
         <Filename Value="..\..\UsbAsp-flash\software\main.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2282"/>
         <CursorPos X="17" Y="2310"/>
-        <UsageCount Value="1"/>
+        <UsageCount Value="10"/>
       </Unit35>
       <Unit36>
         <Filename Value="C:\lazarus\lcl\forms.pp"/>
@@ -302,14 +305,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="1491"/>
         <CursorPos X="15" Y="1506"/>
-        <UsageCount Value="24"/>
+        <UsageCount Value="23"/>
       </Unit36>
       <Unit37>
         <Filename Value="spimulti.pas"/>
         <EditorIndex Value="2"/>
         <TopLine Value="93"/>
         <CursorPos Y="136"/>
-        <UsageCount Value="30"/>
+        <UsageCount Value="41"/>
         <Loaded Value="True"/>
       </Unit37>
       <Unit38>
@@ -319,7 +322,7 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="64"/>
-        <UsageCount Value="7"/>
+        <UsageCount Value="6"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit38>
       <Unit39>
@@ -327,7 +330,7 @@
         <EditorIndex Value="6"/>
         <TopLine Value="365"/>
         <CursorPos X="16" Y="397"/>
-        <UsageCount Value="27"/>
+        <UsageCount Value="38"/>
         <Loaded Value="True"/>
       </Unit39>
       <Unit40>
@@ -335,135 +338,135 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="35"/>
         <CursorPos X="2" Y="52"/>
-        <UsageCount Value="7"/>
+        <UsageCount Value="6"/>
       </Unit40>
       <Unit41>
         <Filename Value="..\mphexeditor\src\mphexeditorlaz.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="11"/>
-        <UsageCount Value="7"/>
+        <UsageCount Value="6"/>
       </Unit41>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
-        <Filename Value="spi25nand.pas"/>
-        <Caret Line="316" TopLine="295"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="823" TopLine="799"/>
       </Position1>
       <Position2>
-        <Filename Value="spi25nand.pas"/>
-        <Caret Line="320" TopLine="295"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="821" Column="85" TopLine="800"/>
       </Position2>
       <Position3>
-        <Filename Value="spi25nand.pas"/>
-        <Caret Line="323" TopLine="295"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="825" TopLine="801"/>
       </Position3>
       <Position4>
-        <Filename Value="spi25nand.pas"/>
-        <Caret Line="324" TopLine="295"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="819" Column="25" TopLine="805"/>
       </Position4>
       <Position5>
-        <Filename Value="spi25nand.pas"/>
-        <Caret Line="325" TopLine="295"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="820" Column="14" TopLine="805"/>
       </Position5>
       <Position6>
-        <Filename Value="spi25nand.pas"/>
-        <Caret Line="326" TopLine="295"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="822" TopLine="805"/>
       </Position6>
       <Position7>
-        <Filename Value="spi25nand.pas"/>
-        <Caret Line="327" TopLine="295"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="823" TopLine="805"/>
       </Position7>
       <Position8>
-        <Filename Value="spi25nand.pas"/>
-        <Caret Line="330" TopLine="300"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="824" TopLine="805"/>
       </Position8>
       <Position9>
-        <Filename Value="spi25nand.pas"/>
-        <Caret Line="333" TopLine="303"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="825" TopLine="805"/>
       </Position9>
       <Position10>
-        <Filename Value="spi25nand.pas"/>
-        <Caret Line="340" TopLine="307"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="818" Column="3" TopLine="805"/>
       </Position10>
       <Position11>
-        <Filename Value="spi25nand.pas"/>
-        <Caret Line="341" TopLine="308"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="822" TopLine="805"/>
       </Position11>
       <Position12>
-        <Filename Value="spi25nand.pas"/>
-        <Caret Line="315" TopLine="310"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="823" TopLine="805"/>
       </Position12>
       <Position13>
         <Filename Value="main.pas"/>
-        <Caret Line="153" Column="5" TopLine="134"/>
+        <Caret Line="824" TopLine="805"/>
       </Position13>
       <Position14>
         <Filename Value="main.pas"/>
-        <Caret Line="2950" Column="37" TopLine="2944"/>
+        <Caret Line="825" TopLine="805"/>
       </Position14>
       <Position15>
         <Filename Value="main.pas"/>
-        <Caret Line="2451" Column="107" TopLine="2423"/>
+        <Caret Line="846" Column="11" TopLine="798"/>
       </Position15>
       <Position16>
         <Filename Value="main.pas"/>
-        <Caret Line="2458" Column="78" TopLine="2436"/>
+        <Caret Line="1485" Column="11" TopLine="1479"/>
       </Position16>
       <Position17>
         <Filename Value="main.pas"/>
-        <Caret Line="2643" Column="83" TopLine="2622"/>
+        <Caret Line="1256" Column="6" TopLine="1238"/>
       </Position17>
       <Position18>
         <Filename Value="main.pas"/>
-        <Caret Line="2735" Column="15" TopLine="2716"/>
+        <Caret Line="1520" Column="5" TopLine="1455"/>
       </Position18>
       <Position19>
         <Filename Value="main.pas"/>
-        <Caret Line="3210" Column="4" TopLine="3190"/>
+        <Caret Line="817" TopLine="799"/>
       </Position19>
       <Position20>
         <Filename Value="main.pas"/>
-        <Caret Line="2735" Column="15" TopLine="2700"/>
+        <Caret Line="1488" TopLine="1469"/>
       </Position20>
       <Position21>
         <Filename Value="main.pas"/>
-        <Caret Line="3210" Column="4" TopLine="3163"/>
+        <Caret Line="1240" Column="44" TopLine="1209"/>
       </Position21>
       <Position22>
         <Filename Value="main.pas"/>
-        <Caret Line="3751" Column="14" TopLine="3734"/>
+        <Caret Line="1583" Column="11" TopLine="1577"/>
       </Position22>
       <Position23>
         <Filename Value="main.pas"/>
-        <Caret Line="203" Column="15" TopLine="184"/>
+        <Caret Line="1337" Column="61" TopLine="1324"/>
       </Position23>
       <Position24>
         <Filename Value="main.pas"/>
-        <Caret Line="1509" Column="11" TopLine="1488"/>
+        <Caret Line="845" Column="7" TopLine="794"/>
       </Position24>
       <Position25>
         <Filename Value="main.pas"/>
-        <Caret Line="2037" Column="11" TopLine="2017"/>
+        <Caret Line="891" Column="9" TopLine="827"/>
       </Position25>
       <Position26>
         <Filename Value="main.pas"/>
-        <Caret Line="203" Column="15" TopLine="184"/>
+        <Caret Line="815" Column="3" TopLine="795"/>
       </Position26>
       <Position27>
         <Filename Value="main.pas"/>
-        <Caret Line="2848" Column="32" TopLine="2802"/>
+        <Caret Line="107" Column="5" TopLine="87"/>
       </Position27>
       <Position28>
-        <Filename Value="main.pas"/>
-        <Caret Line="184" Column="15" TopLine="167"/>
+        <Filename Value="spi25nand.pas"/>
+        <Caret Line="202" TopLine="202"/>
       </Position28>
       <Position29>
-        <Filename Value="sregedit.pas"/>
-        <Caret Line="324" TopLine="97"/>
+        <Filename Value="spi25nand.pas"/>
+        <Caret Line="96" Column="11" TopLine="96"/>
       </Position29>
       <Position30>
-        <Filename Value="sregedit.pas"/>
-        <Caret Line="90" Column="8" TopLine="59"/>
+        <Filename Value="spi25nand.pas"/>
+        <Caret Line="108" Column="10" TopLine="108"/>
       </Position30>
     </JumpHistory>
     <RunParams>
@@ -474,18 +477,12 @@
   <Debugging>
     <BreakPoints>
       <Item>
-        <Kind Value="bpkSource"/>
-        <WatchScope Value="wpsLocal"/>
+        <Kind Value="bpkData"/>
+        <WatchData Value="PageAddr"/>
+        <WatchScope Value="wpsGlobal"/>
         <WatchKind Value="wpkWrite"/>
-        <Source Value="main.pas"/>
-        <Line Value="1247"/>
-      </Item>
-      <Item>
-        <Kind Value="bpkSource"/>
-        <WatchScope Value="wpsLocal"/>
-        <WatchKind Value="wpkWrite"/>
-        <Source Value="main.pas"/>
-        <Line Value="270"/>
+        <BreakHitCount Value="65534"/>
+        <InitialEnabled Value="False"/>
       </Item>
     </BreakPoints>
     <Watches>
