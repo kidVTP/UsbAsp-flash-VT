@@ -5,6 +5,9 @@
   id - индефикатор микросхемы памяти(HEX). Поддерживаются опкоды 9F, 90, AB, 15
   spicmd - команды для серий микросхем памяти 25, 45, 95(EEPROM)
   script - имя файла скрипта из папки scripts  
+
+   <MT29F2G01ABAGDWB id="2C24" page="2048" size="268435456" spare="128" spicmd="25N" planes="2" block="64"/>  // MT29F2G01 - 2 planes , block = 64 (hoặc không cần thuộc tính block mặc định = 64)
+   <W25N01GVSFIG id="EFAA21" page="2048" size="134217728" spare="64" spicmd="25N" planes="1"/> // W25N01GV - 1 plane (hoặc không cần thuộc tính planes mặc định = 1) 
  -->
 <chiplist>
   <SPI>
@@ -1017,14 +1020,44 @@
     </Paragon>
   </SPI>
   <SPI_NAND>
+    <DOSILICON>
+      <DS35Q1GA id="E571" page="2048" size="134217728" spare="64" spicmd="25N" planes="1" block="64"/>
+      <DS35Q2GA id="E572" page="2048" size="268435456" spare="64" spicmd="25N" planes="2" block="64"/>
+    </DOSILICON>
+    <FORESEE>
+      <FS35ND01G-S1Y2 id="CDEA11" page="2048" size="134217728" spare="64" spicmd="25N" planes="1" block="64"/>
+      <FS35ND02G-S3Y2 id="CDEB11" page="2048" size="268435456" spare="64" spicmd="25N" planes="2" block="64"/>
+      <FS35ND04G-S2Y2 id="CDEC11" page="2048" size="536870912" spare="64" spicmd="25N" planes="2" block="64"/>
+    </FORESEE>
+    <GIGADEVICE>
+      <GD5F1GQ5UEYIG id="C851" page="2048" size="134217728" spare="128" spicmd="25N" planes="1" block="64"/>
+      <GD5F2GQ5UEYIG id="C852" page="2048" size="268435456" spare="128" spicmd="25N" planes="2" block="64"/>
+    </GIGADEVICE>
+    <KIOXIA>
+      <TC58CVG0S3HRAIJ id="98E240" page="2048" size="134217728" spare="128" spicmd="25N" planes="1" block="64"/>
+      <TC58CVG1S3HRAIJ id="98EB40" page="2048" size="268435456" spare="128" spicmd="25N" planes="2" block="64"/>
+      <TC58CVG2S0HRAIJ id="98ED51" page="2048" size="536870912" spare="64" spicmd="25N" planes="2" block="64"/>
+    </KIOXIA>
+    <MACRONIX>
+      <MX35LF1GE4AB id="C212" page="2048" size="134217728" spare="64" spicmd="25N" planes="1" block="64"/>
+      <MX35LF2GE4AB id="C222" page="2048" size="268435456" spare="64" spicmd="25N" planes="2" block="64"/>
+    </MACRONIX>
     <MICRON>
-	    <MT29F2G01ABAGDWB vcc="3.3" id="2C24" page="2048" size="268435456" spare="64" spicmd="25N" planes="2"/>	  
-	    <MT29F2G01ABAGDSF-ECC_OOB vcc="3.3" id="2C24" page="2048" size="268435456" spare="64" spicmd="25N" planes="2"/>
-	    <MT29F2G01ABAGD12 vcc="3.3" id="2C24" page="2048" size="268435456" spare="64" spicmd="25N" planes="2"/>
+      <MT29F1G01ABAFDWB id="2C14" page="2048" size="134217728" spare="64" spicmd="25N" planes="1" block="64"/>
+      <MT29F2G01ABAGDWB id="2C24" page="2048" size="268435456" spare="128" spicmd="25N" planes="2"/>  
+	    <MT29F2G01ABAGDSF-ECC_OOB id="2C24" page="2048" size="268435456" spare="64" spicmd="25N" planes="2"/>
+	    <MT29F2G01ABAGD12 id="2C24" page="2048" size="268435456" spare="64" spicmd="25N" planes="2"/>
+      <MT29F4G01ABAFDWB id="2C34" page="2048" size="536870912" spare="128" spicmd="25N" planes="2" block="64"/>
     </MICRON>
     <WINBOND>
-      <W25N01GVZ id="EFAA21" page="2048" size="134217728" spare="64" spicmd="25N"/>
+      <W25N01GVSFIG id="EFAA21" page="2048" size="134217728" spare="64" spicmd="25N" planes="1"/> 
+      <W25N02KVZEIR id="EFAA22" page="2048" size="268435456" spare="128" spicmd="25N" planes="2" block="64"/>
+      <W25N04KVZEIR id="EFAA23" page="2048" size="536870912" spare="128" spicmd="25N" planes="4" block="64"/>
     </WINBOND>
+    <XTX>
+      <XT26G01AWSEGA id="0BE1" page="2048" size="134217728" spare="64" spicmd="25N" planes="1" block="64"/>
+      <XT26G02AWSEGA id="0BE2" page="2048" size="268435456" spare="128" spicmd="25N" planes="2" block="64"/>
+    </XTX>
   </SPI_NAND>
   <I2C>
     <_24Cxxx>

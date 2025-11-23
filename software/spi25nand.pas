@@ -79,6 +79,20 @@ type
   // ============================================================================
   // CHIP CHARACTERISTICS - Để mở rộng dễ dàng
   // ============================================================================
+  TManufacturerInfo = record
+    ID: Byte;
+    Name: string;
+    IDLength: integer;
+    HasSignature: boolean;
+  end;
+
+  TParsedChipID = record
+    IsValid: Boolean;
+    RawBytes: array[0..2] of Byte;
+    IDString: string;
+    MfgInfo: TManufacturerInfo;
+  end;
+
   TSpiNandChipInfo = record
     RowAddrBytes: byte;      // 2 hoặc 3 bytes cho Row Address
     ColAddrBytes: byte;      // 2 bytes cho Column Address
@@ -102,7 +116,9 @@ function UsbAsp25NAND_Unprotect(): integer;
 function UsbAsp25NAND_ReadBBTable(var BBTable: array of byte): integer;
 
 // Helper functions
-function UsbAsp25NAND_GetManufacturerName(MfgID: byte): string;
+function GetManufacturerInfo(MfgID: byte): TManufacturerInfo;
+function ParseChipID(const ID_NAND: MEMORY_ID_NAND): TParsedChipID;
+function FormatChipIDString(const ParsedID: TParsedChipID): string;
 function GetManufacturerID(): byte;
 function GetPlaneAddressMode(MfgID: byte; Planes: integer): TPlaneAddressMode;
 function GetChipInfo(MfgID: byte; Planes: integer): TSpiNandChipInfo;
@@ -111,6 +127,109 @@ function UsbAsp25NAND_WaitWhileBusy(TimeoutMs: integer = 1000): boolean;
 implementation
 
 uses Main;
+
+// ============================================================================
+// MANUFACTURER DATABASE - Cơ sở dữ liệu nhà sản xuất
+// ============================================================================
+const
+  MANUFACTURER_DATABASE: array[0..11] of TManufacturerInfo = (
+    (ID: $2C; Name: 'Micron';      IDLength: 2; HasSignature: False),
+    (ID: $C8; Name: 'GigaDevice';  IDLength: 2; HasSignature: False),
+    (ID: $C2; Name: 'Macronix';    IDLength: 2; HasSignature: False),
+    (ID: $E5; Name: 'Dosilicon';   IDLength: 2; HasSignature: False),
+    (ID: $0B; Name: 'XTX';         IDLength: 2; HasSignature: False),
+    (ID: $EF; Name: 'Winbond';     IDLength: 3; HasSignature: True),   // AA signature
+    (ID: $98; Name: 'Kioxia';      IDLength: 3; HasSignature: False),
+    (ID: $CD; Name: 'Foresee';     IDLength: 3; HasSignature: False),
+    (ID: $A1; Name: 'FMSH';        IDLength: 2; HasSignature: False),
+    (ID: $C9; Name: 'HeYang';      IDLength: 2; HasSignature: False),
+    (ID: $5E; Name: 'Zbit';        IDLength: 2; HasSignature: False),
+    (ID: $9B; Name: 'ATO';         IDLength: 2; HasSignature: False)
+  );
+
+// ============================================================================
+// ID PARSING FUNCTIONS - Hàm xử lý ID
+// ============================================================================
+
+// Tìm thông tin manufacturer từ ID byte
+function GetManufacturerInfo(MfgID: byte): TManufacturerInfo;
+var
+  i: integer;
+begin
+  // Tìm trong database
+  for i := 0 to High(MANUFACTURER_DATABASE) do
+  begin
+    if MANUFACTURER_DATABASE[i].ID = MfgID then
+    begin
+      Result := MANUFACTURER_DATABASE[i];
+      Exit;
+    end;
+  end;
+  
+  // Nếu không tìm thấy, trả về default (2 bytes, no signature)
+  Result.ID := MfgID;
+  Result.Name := 'Unknown';
+  Result.IDLength := 2;  // Default: assume 2-byte ID
+  Result.HasSignature := False;
+end;
+
+// Parse ID từ chip thành cấu trúc có thông tin đầy đủ
+function ParseChipID(const ID_NAND: MEMORY_ID_NAND): TParsedChipID;
+begin
+  // Copy raw bytes
+  Move(ID_NAND.ID9FH, Result.RawBytes, 3);
+  
+  // Lấy thông tin manufacturer từ byte đầu tiên
+  Result.MfgInfo := GetManufacturerInfo(ID_NAND.ID9FH[0]);
+  
+  // Tạo ID string theo đúng độ dài
+  case Result.MfgInfo.IDLength of
+    2: Result.IDString := UpperCase(
+         IntToHex(ID_NAND.ID9FH[0], 2) + 
+         IntToHex(ID_NAND.ID9FH[1], 2));
+    3: Result.IDString := UpperCase(
+         IntToHex(ID_NAND.ID9FH[0], 2) + 
+         IntToHex(ID_NAND.ID9FH[1], 2) + 
+         IntToHex(ID_NAND.ID9FH[2], 2));
+    else Result.IDString := UpperCase(
+           IntToHex(ID_NAND.ID9FH[0], 2) + 
+           IntToHex(ID_NAND.ID9FH[1], 2));
+  end;
+  
+  // Kiểm tra tính hợp lệ
+  Result.IsValid := (ID_NAND.ID9FH[0] <> $00) and (ID_NAND.ID9FH[0] <> $FF);
+end;
+
+// Format thông tin ID thành chuỗi log đẹp
+function FormatChipIDString(const ParsedID: TParsedChipID): string;
+begin
+  Result := '';
+  Result := Result + 'Raw ID Bytes: ' + 
+            IntToHex(ParsedID.RawBytes[0], 2) + ' ' + 
+            IntToHex(ParsedID.RawBytes[1], 2) + ' ' + 
+            IntToHex(ParsedID.RawBytes[2], 2) + #13#10;
+  Result := Result + 'Manufacturer: ' + ParsedID.MfgInfo.Name + 
+            ' (0x' + IntToHex(ParsedID.MfgInfo.ID, 2) + ')' + #13#10;
+  Result := Result + 'ID Length:    ' + IntToStr(ParsedID.MfgInfo.IDLength) + ' bytes' + #13#10;
+  
+  if ParsedID.MfgInfo.HasSignature then
+    Result := Result + 'Signature:    0x' + IntToHex(ParsedID.RawBytes[1], 2) + 
+              ' (Winbond specific)' + #13#10;
+  
+  Result := Result + 'Chip ID:      ' + ParsedID.IDString + #13#10;
+  Result := Result + '----------------------------------------' + #13#10;
+  
+  // Format explanation
+  case ParsedID.MfgInfo.IDLength of
+    2: Result := Result + 'Format: [Manufacturer][Device]';
+    3: begin
+      if ParsedID.MfgInfo.HasSignature then
+        Result := Result + 'Format: [Manufacturer][Signature][Device]'
+      else
+        Result := Result + 'Format: [Manufacturer][Device][Extra]';
+    end;
+  end;
+end;
 
 // ============================================================================
 // MANUFACTURER DATABASE
@@ -139,28 +258,6 @@ uses Main;
   Note: Hầu hết các chip 2-plane dùng Column bit 12 cho plane select,
         chỉ Winbond dùng Row Address PA[16] hoặc PA[17:16]
 }
-
-// ============================================================================
-// HELPER FUNCTION: Lấy tên manufacturer từ ID
-// ============================================================================
-function UsbAsp25NAND_GetManufacturerName(MfgID: byte): string;
-begin
-  case MfgID of
-    $EF: Result := ' (Winbond)';
-    $2C: Result := ' (Micron)';
-    $C8: Result := ' (GigaDevice)';
-    $C2: Result := ' (Macronix)';
-    $98: Result := ' (Kioxia/Toshiba)';
-    $CD: Result := ' (Foresee/Longsys)';
-    $0B: Result := ' (XTX)';
-    $E5: Result := ' (Dosilicon)';
-    $A1: Result := ' (FMSH)';
-    $C9: Result := ' (HeYang)';
-    $5E: Result := ' (Zbit)';
-    $9B: Result := ' (ATO)';
-    else Result := ' (Unknown)';
-  end;
-end;
 
 // Lấy Manufacturer ID từ tên chip hoặc ID đã đọc
 function GetManufacturerID(): byte;
