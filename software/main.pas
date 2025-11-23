@@ -804,7 +804,7 @@ end;
 
 
 // Cập nhật hàm WriteFlash25NAND
-procedure WriteFlash25NAND(var RomStream: TMemoryStream; StartAddress, WriteSize: cardinal; PageSize: word; WriteType: integer);
+procedure WriteFlash25NAND(var RomStream: TMemoryStream; StartAddress, WriteSize: cardinal; PageSize: word);
 var
   SPI_NAND_TOTAL_PAGE_SIZE: integer;
   DataChunk: array of byte;
@@ -828,12 +828,11 @@ begin
   // Lấy tổng kích thước trang từ CurrentICParam
   SPI_NAND_TOTAL_PAGE_SIZE := CurrentICParam.Page + CurrentICParam.Spare;
   SetLength(DataChunk, SPI_NAND_TOTAL_PAGE_SIZE);
-  LogPrint('Writing SPI NAND Flash (WriteType: ' + IntToStr(WriteType) + ')');
   BytesWrite := 0;
   PageCount := WriteSize div CurrentICParam.Page;
   if (WriteSize mod CurrentICParam.Page) > 0 then Inc(PageCount);
   MainForm.ProgressBar.Max := PageCount;
-
+  LogPrint(STR_WRITING_FLASH);
   for PageAddr := 0 to PageCount - 1 do
   begin
     RomStream.ReadBuffer(DataChunk[0], CurrentICParam.Page); // Chỉ đọc phần page size
@@ -2673,7 +2672,7 @@ begin
       else if ComboSPICMD.ItemIndex = SPI_CMD_KB then
         WriteFlashKB(RomF, 0, MPHexEditorEx.DataSize, PageSize)
       else if ComboSPICMD.ItemIndex = SPI_CMD_25_NAND then // Thêm nhánh cho NAND
-        WriteFlash25NAND(RomF, Hex2Dec('$'+StartAddressEdit.Text), MPHexEditorEx.DataSize, PageSize, WriteType); // Gọi hàm NAND
+        WriteFlash25NAND(RomF, Hex2Dec('$'+StartAddressEdit.Text), MPHexEditorEx.DataSize, PageSize); // Gọi hàm NAND
 
       // Xác minh sau ghi (nếu bật)
       // Chú ý: VerifyFlash25NAND hiện tại có thể không nhận WriteType, nên kiểm tra nếu cần
@@ -3069,165 +3068,213 @@ end;
 procedure TMainForm.ButtonReadIDClick(Sender: TObject);
 var
   XMLfile: TXMLDocument;
-  ID: MEMORY_ID; // ID cho SPI NOR
-  ID_NAND: MEMORY_ID_NAND; // ID cho SPI NAND
-  IDstr9FH: string[6];
-  IDstr90H: string[4];
-  IDstrABH: string[6];
-  IDstr15H: string[4];
-  // Biến tạm để xử lý ID NAND nếu cần
-  NAND_ID_Str: string; // Ví dụ: có thể cần ID khác để tìm kiếm
+  ID: MEMORY_ID;
+  ID_NAND: MEMORY_ID_NAND;
+  IDstr9FH: string;
+  IDstr90H: string;
+  IDstrABH: string;
+  IDstr15H: string;
+  IDstr_2byte: string;  // ID 2 bytes (MfgID + DevID)
+  IDstr_3byte: string;  // ID 3 bytes (MfgID + DevID + extra)
+  MatchedID: string;
+  Found3Byte: boolean;
+  Found2Byte: boolean;
+
+
 begin
   try
     if not OpenDevice() then exit;
     LockControl();
 
-    // Khởi tạo dữ liệu ID
+    // Khởi tạo
     FillByte(ID.ID9FH, 3, $FF);
     FillByte(ID.ID90H, 2, $FF);
     FillByte(ID.IDABH, 1, $FF);
     FillByte(ID.ID15H, 2, $FF);
-    // FillByte(ID_NAND.ID9FH, 3, $FF); // Nếu cần khởi tạo riêng cho NAND
+    FillByte(ID_NAND.ID9FH, 3, $FF);
 
-    // Vào chế độ lập trình dựa trên loại chip được chọn
+    // ========================================================================
+    // ENTER PROGRAM MODE
+    // ========================================================================
     if ComboSPICMD.ItemIndex = SPI_CMD_KB then
     begin
-      EnterProgMode25(SetSPISpeed(0), MainForm.MenuSendAB.Checked); // KB cũng dùng logic 25?
+      EnterProgMode25(SetSPISpeed(0), MainForm.MenuSendAB.Checked);
       UsbAspMulti_EnableEDI();
       UsbAspMulti_EnableEDI();
-      UsbAspMulti_ReadReg($FF00, ID.IDABH); //read EC hardware version
-      LogPrint('KB9012 EC Hardware version: '+IntToHex(ID.IDABH, 2));
-      UsbAspMulti_ReadReg($FF24, ID.IDABH); //read EDI version
-      LogPrint('KB9012 EDI version: '+IntToHex(ID.IDABH, 2));
-      ExitProgMode25; // Dùng ExitProgMode25 cho KB?
-      Exit; // Thoát sớm cho KB
+      UsbAspMulti_ReadReg($FF00, ID.IDABH);
+      LogPrint('KB9012 EC Hardware version: ' + IntToHex(ID.IDABH, 2));
+      UsbAspMulti_ReadReg($FF24, ID.IDABH);
+      LogPrint('KB9012 EDI version: ' + IntToHex(ID.IDABH, 2));
+      ExitProgMode25;
+      Exit;
     end
     else if ComboSPICMD.ItemIndex = SPI_CMD_25_NAND then
     begin
-      // Gọi hàm vào chế độ cho SPI NAND
+      // SPI NAND
       EnterProgMode25NAND(SetSPISpeed(0));
-      // Gọi hàm đọc ID cho SPI NAND
       UsbAsp25NAND_ReadID(ID_NAND);
-      // Gọi hàm ra chế độ cho SPI NAND
       ExitProgMode25NAND;
     end
-    else // SPI_CMD_25 hoặc các loại khác (giữ nguyên logic cũ)
+    else
     begin
+      // SPI NOR
       EnterProgMode25(SetSPISpeed(0), MainForm.MenuSendAB.Checked);
       UsbAsp25_ReadID(ID);
       ExitProgMode25;
     end;
 
-    // Đóng thiết bị (thường được gọi sau khi thoát chế độ lập trình)
     AsProgrammer.Programmer.DevClose;
 
-    // Xử lý và in ra ID dựa trên loại chip
+    // ========================================================================
+    // FORMAT ID STRING
+    // ========================================================================
     if ComboSPICMD.ItemIndex = SPI_CMD_25_NAND then
     begin
-        // Sử dụng dữ liệu từ ID_NAND
-        IDstr9FH := Upcase(IntToHex(ID_NAND.ID9FH[0], 2)+IntToHex(ID_NAND.ID9FH[1], 2)+IntToHex(ID_NAND.ID9FH[2], 2));
-        // IDstr90H, IDstrABH, IDstr15H có thể không áp dụng hoặc có cách đọc khác cho NAND
-        // Bạn có thể gán rỗng hoặc dùng giá trị cụ thể nếu có
-        IDstr90H := '';
-        IDstrABH := '';
-        IDstr15H := '';
+      // SPI NAND: Tạo cả ID 2-byte và 3-byte
+      IDstr_2byte := UpperCase(IntToHex(ID_NAND.ID9FH[0], 2) +
+                               IntToHex(ID_NAND.ID9FH[1], 2));
+      IDstr_3byte := UpperCase(IntToHex(ID_NAND.ID9FH[0], 2) +
+                               IntToHex(ID_NAND.ID9FH[1], 2) +
+                               IntToHex(ID_NAND.ID9FH[2], 2));
 
-        // In ra ID NAND
-        LogPrint('SPI NAND ID(9F): '+ IDstr9FH);
-        // LogPrint('ID(90): '+ IDstr90H); // Có thể không dùng
-        // LogPrint('ID(AB): '+ IDstrABH); // Có thể không dùng
-        // LogPrint('ID(15): '+ IDstr15H); // Có thể không dùng
-
-        // Gán giá trị tìm kiếm (giả sử dùng ID9FH)
-        NAND_ID_Str := IDstr9FH; // Có thể cần logic phức tạp hơn nếu có nhiều ID
+      // Log thông tin chi tiết
+      LogPrint('SPI NAND ID(9F): ' + IDstr_3byte);
+      LogPrint('  Manufacturer: ' + IntToHex(ID_NAND.ID9FH[0], 2) +
+               UsbAsp25NAND_GetManufacturerName(ID_NAND.ID9FH[0]));
+      //LogPrint('  Device:       ' + IntToHex(ID_NAND.ID9FH[1], 2));
+      //LogPrint('  Extra byte:   ' + IntToHex(ID_NAND.ID9FH[2], 2));
     end
-    else // SPI_CMD_25 hoặc các loại khác (giữ nguyên logic cũ)
+    else
     begin
-        IDstr9FH := Upcase(IntToHex(ID.ID9FH[0], 2)+IntToHex(ID.ID9FH[1], 2)+IntToHex(ID.ID9FH[2], 2));
-        IDstr90H := Upcase(IntToHex(ID.ID90H[0], 2)+IntToHex(ID.ID90H[1], 2));
-        IDstrABH := Upcase(IntToHex(ID.IDABH, 2));
-        IDstr15H := Upcase(IntToHex(ID.ID15H[0], 2)+IntToHex(ID.ID15H[1], 2));
+      // SPI NOR (giữ nguyên logic cũ)
+      IDstr9FH := UpperCase(IntToHex(ID.ID9FH[0], 2) +
+                           IntToHex(ID.ID9FH[1], 2) +
+                           IntToHex(ID.ID9FH[2], 2));
+      IDstr90H := UpperCase(IntToHex(ID.ID90H[0], 2) + IntToHex(ID.ID90H[1], 2));
+      IDstrABH := UpperCase(IntToHex(ID.IDABH, 2));
+      IDstr15H := UpperCase(IntToHex(ID.ID15H[0], 2) + IntToHex(ID.ID15H[1], 2));
 
-        LogPrint('ID(9F): '+ IDstr9FH +STR_ID_UNKNOWN);
-        LogPrint('ID(90): '+ IDstr90H +STR_ID_UNKNOWN);
-        LogPrint('ID(AB): '+ IDstrABH +STR_ID_UNKNOWN);
-        LogPrint('ID(15): '+ IDstr15H +STR_ID_UNKNOWN);
-
-        // Gán giá trị tìm kiếm (giả sử dùng ID9FH)
-        NAND_ID_Str := ''; // Không áp dụng cho NOR trong logic tìm kiếm này
+      LogPrint('ID(9F): ' + IDstr9FH + STR_ID_UNKNOWN);
+      LogPrint('ID(90): ' + IDstr90H + STR_ID_UNKNOWN);
+      LogPrint('ID(AB): ' + IDstrABH + STR_ID_UNKNOWN);
+      LogPrint('ID(15): ' + IDstr15H + STR_ID_UNKNOWN);
     end;
 
-    // Cập nhật tìm kiếm chip nếu là SPI (NOR hoặc NAND)
-    if (ComboSPICMD.ItemIndex = SPI_CMD_25) or (ComboSPICMD.ItemIndex = SPI_CMD_25_NAND) then
+    // ========================================================================
+    // SEARCH CHIP IN chiplist.xml
+    // ========================================================================
+    if (ComboSPICMD.ItemIndex = SPI_CMD_25) or
+       (ComboSPICMD.ItemIndex = SPI_CMD_25_NAND) then
     begin
-        if FileExists('chiplist.xml') then
+      if FileExists('chiplist.xml') then
+      begin
+        try
+          ReadXMLFile(XMLfile, 'chiplist.xml');
+        except
+          on E: EXMLReadError do
+          begin
+            ShowMessage(E.Message);
+            Exit;
+          end;
+        end;
+
+        ChipSearchForm.ListBoxChips.Clear;
+        ChipSearchForm.EditSearch.Text := '';
+
+        if ComboSPICMD.ItemIndex = SPI_CMD_25 then
         begin
-          try
-            ReadXMLFile(XMLfile, 'chiplist.xml');
-          except
-            on E: EXMLReadError do
+          // SPI NOR: Tìm theo thứ tự ưu tiên
+          FindChip.FindChip(XMLfile, '', IDstr9FH);
+          if ChipSearchForm.ListBoxChips.Items.Capacity = 0 then
+            FindChip.FindChip(XMLfile, '', IDstr90H);
+          if ChipSearchForm.ListBoxChips.Items.Capacity = 0 then
+            FindChip.FindChip(XMLfile, '', IDstrABH);
+          if ChipSearchForm.ListBoxChips.Items.Capacity = 0 then
+            FindChip.FindChip(XMLfile, '', IDstr15H);
+        end
+        else if ComboSPICMD.ItemIndex = SPI_CMD_25_NAND then
+        begin
+          // ====================================================================
+          // SPI NAND: Thử tìm cả 2-byte và 3-byte ID
+          // ====================================================================
+          MatchedID := '';
+          Found3Byte := False;
+          Found2Byte := False;
+
+          // 1. Thử tìm với 3-byte ID trước (full ID)
+          FindChip.FindChip(XMLfile, '', IDstr_3byte);
+
+          if ChipSearchForm.ListBoxChips.Items.Capacity > 0 then
+          begin
+            // Tìm thấy với 3-byte ID
+            Found3Byte := True;
+            MatchedID := IDstr_3byte;
+          end
+          else
+          begin
+            // 2. Nếu không tìm thấy, thử 2-byte ID (Mfg + Device)
+            LogPrint('  Not found with 3-byte ID (' + IDstr_3byte + '), trying 2-byte ID: ' + IDstr_2byte);
+            FindChip.FindChip(XMLfile, '', IDstr_2byte);
+
+            if ChipSearchForm.ListBoxChips.Items.Capacity > 0 then
             begin
-              ShowMessage(E.Message);
+              // Tìm thấy với 2-byte ID
+              Found2Byte := True;
+              MatchedID := IDstr_2byte;
             end;
           end;
 
-          ChipSearchForm.ListBoxChips.Clear;
-          ChipSearchForm.EditSearch.Text:= '';
-
-          // Tìm chip dựa trên ID đã lấy ở trên
-          // Ưu tiên tìm ID chính (giả sử là ID9FH cho cả NOR và NAND)
-          if (ComboSPICMD.ItemIndex = SPI_CMD_25) then
+          // 3. Nếu vẫn không tìm thấy
+          if (not Found3Byte) and (not Found2Byte) then
           begin
-              // Logic tìm kiếm cho SPI NOR (giữ nguyên)
-              FindChip.FindChip(XMLfile, '', IDstr9FH);
-              if ChipSearchForm.ListBoxChips.Items.Capacity = 0 then FindChip.FindChip(XMLfile, '', IDstr90H);
-              if ChipSearchForm.ListBoxChips.Items.Capacity = 0 then FindChip.FindChip(XMLfile, '', IDstrABH);
-              if ChipSearchForm.ListBoxChips.Items.Capacity = 0 then FindChip.FindChip(XMLfile, '', IDstr15H);
-          end
-          else if (ComboSPICMD.ItemIndex = SPI_CMD_25_NAND) then
-          begin
-              // Logic tìm kiếm cho SPI NAND (có thể chỉ cần ID9FH hoặc ID khác)
-              // Bạn cần đảm bảo 'chiplist.xml' có định nghĩa chip NAND với ID phù hợp
-              FindChip.FindChip(XMLfile, '', IDstr9FH); // Thử tìm với ID9FH trước
-              // Nếu chip NAND có định dạng khác trong XML, bạn cần cập nhật FindChip.FindChip
-              // hoặc có logic riêng để ánh xạ ID NAND sang tên chip trong XML.
-              // Ví dụ: FindChip.FindChipByNANDID(XMLfile, NAND_ID_Str); (nếu bạn tạo hàm này)
+            LogPrint('  Chip not found in database.');
+            LogPrint('  Please add this entry to chiplist.xml:');
+            LogPrint('  <YourChip id="' + IDstr_3byte + '" page="2048" size="..." ' +
+                    'spare="..." spicmd="25N" planes="..." block="64"/>');
           end;
-
-          XMLfile.Free;
         end;
 
+        XMLfile.Free;
+
+        // ====================================================================
+        // SHOW RESULTS
+        // ====================================================================
         if ChipSearchForm.ListBoxChips.Items.Capacity > 0 then
         begin
           ChipSearchForm.Show;
-          // In lại ID nếu tìm thấy chip
+
           if ComboSPICMD.ItemIndex = SPI_CMD_25_NAND then
           begin
-            LogPrint('SPI NAND ID(9F): '+ IDstr9FH); // In lại nếu cần
+            // Hiển thị ID nào đã match (2-byte hoặc 3-byte)
+            if MatchedID <> '' then
+              LogPrint('✓ Found chip(s) matching ID: ' + MatchedID)
+            else
+              LogPrint('✓ Found chip(s)');
           end
-          else // SPI_CMD_25
+          else
           begin
-            LogPrint('ID(9F): '+ IDstr9FH);
-            LogPrint('ID(90): '+ IDstr90H);
-            LogPrint('ID(AB): '+ IDstrABH);
-            LogPrint('ID(15): '+ IDstr15H);
+            LogPrint('✓ Found chip(s)');
           end;
         end
         else
         begin
-          // Thông báo không tìm thấy (đã được in trước đó, hoặc in lại nếu cần rõ hơn)
           if ComboSPICMD.ItemIndex = SPI_CMD_25_NAND then
           begin
-            LogPrint('SPI NAND ID(9F): '+ IDstr9FH + STR_ID_UNKNOWN);
+            LogPrint('✗ No chip found for ID: ' + IDstr_3byte + ' or ' + IDstr_2byte);
           end;
-          // else // SPI_CMD_25 - đã in trước đó
         end;
-    end; // Kết thúc if (ComboSPICMD.ItemIndex = SPI_CMD_25) or ...
+      end
+      else
+      begin
+        LogPrint('Error: chiplist.xml not found!');
+      end;
+    end;
 
   finally
     UnlockControl();
   end;
 end;
+
 
 procedure TMainForm.ButtonOpenHexClick(Sender: TObject);
 begin
