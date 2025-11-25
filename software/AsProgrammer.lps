@@ -4,7 +4,7 @@
     <PathDelim Value="\"/>
     <Version Value="12"/>
     <BuildModes Active="Debug"/>
-    <Units Count="42">
+    <Units Count="45">
       <Unit0>
         <Filename Value="AsProgrammer.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -18,8 +18,9 @@
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <TopLine Value="3209"/>
-        <CursorPos X="43" Y="3121"/>
+        <IsVisibleTab Value="True"/>
+        <TopLine Value="3085"/>
+        <CursorPos X="7" Y="3035"/>
         <UsageCount Value="204"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -27,7 +28,7 @@
       <Unit2>
         <Filename Value="msgstr.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="13"/>
+        <EditorIndex Value="14"/>
         <TopLine Value="10"/>
         <CursorPos X="3" Y="10"/>
         <UsageCount Value="281"/>
@@ -39,7 +40,7 @@
         <ComponentName Value="SearchForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="12"/>
+        <EditorIndex Value="13"/>
         <TopLine Value="82"/>
         <CursorPos X="26" Y="54"/>
         <UsageCount Value="277"/>
@@ -52,7 +53,7 @@
         <ComponentName Value="sregeditForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="11"/>
+        <EditorIndex Value="12"/>
         <CursorPos X="55" Y="229"/>
         <UsageCount Value="269"/>
         <Loaded Value="True"/>
@@ -65,7 +66,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="ScriptEdit"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="5"/>
         <TopLine Value="162"/>
         <CursorPos X="6" Y="186"/>
         <UsageCount Value="264"/>
@@ -75,7 +76,7 @@
       <Unit6>
         <Filename Value="spi25.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="14"/>
+        <EditorIndex Value="15"/>
         <TopLine Value="13"/>
         <CursorPos X="14" Y="30"/>
         <UsageCount Value="206"/>
@@ -84,7 +85,7 @@
       <Unit7>
         <Filename Value="i2c.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="15"/>
+        <EditorIndex Value="16"/>
         <CursorPos Y="11"/>
         <UsageCount Value="213"/>
         <Loaded Value="True"/>
@@ -92,7 +93,7 @@
       <Unit8>
         <Filename Value="microwire.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="17"/>
+        <EditorIndex Value="19"/>
         <CursorPos X="31" Y="8"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -100,7 +101,7 @@
       <Unit9>
         <Filename Value="spi95.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="18"/>
+        <EditorIndex Value="20"/>
         <CursorPos X="22" Y="8"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -108,7 +109,7 @@
       <Unit10>
         <Filename Value="spi45.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="19"/>
+        <EditorIndex Value="21"/>
         <CursorPos X="29" Y="8"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -116,7 +117,7 @@
       <Unit11>
         <Filename Value="avrisphw.pas"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="4"/>
         <TopLine Value="159"/>
         <CursorPos X="6" Y="176"/>
         <UsageCount Value="200"/>
@@ -125,11 +126,11 @@
       <Unit12>
         <Filename Value="spi25nand.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="16"/>
-        <TopLine Value="79"/>
-        <CursorPos X="67" Y="91"/>
-        <UsageCount Value="86"/>
+        <EditorIndex Value="17"/>
+        <TopLine Value="19"/>
+        <CursorPos X="31" Y="34"/>
+        <FoldState Value=" T3v00nO"/>
+        <UsageCount Value="128"/>
         <Loaded Value="True"/>
       </Unit12>
       <Unit13>
@@ -138,10 +139,10 @@
         <ComponentName Value="ChipSearchForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="2"/>
         <TopLine Value="198"/>
         <CursorPos Y="125"/>
-        <UsageCount Value="79"/>
+        <UsageCount Value="121"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit13>
@@ -149,50 +150,50 @@
         <Filename Value="usbaspmulti.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="9"/>
-        <UsageCount Value="198"/>
+        <UsageCount Value="193"/>
       </Unit14>
       <Unit15>
         <Filename Value="usbaspi2c.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="37"/>
         <CursorPos Y="205"/>
-        <UsageCount Value="182"/>
+        <UsageCount Value="177"/>
       </Unit15>
       <Unit16>
         <Filename Value="usbaspmw.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="15"/>
-        <UsageCount Value="195"/>
+        <UsageCount Value="190"/>
       </Unit16>
       <Unit17>
         <Filename Value="usbasp95.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="42" Y="6"/>
-        <UsageCount Value="283"/>
+        <UsageCount Value="278"/>
       </Unit17>
       <Unit18>
         <Filename Value="ch341mw.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="9" Y="86"/>
-        <UsageCount Value="244"/>
+        <UsageCount Value="239"/>
       </Unit18>
       <Unit19>
         <Filename Value="usbasp25.pas"/>
         <UnitName Value="spi25"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="6"/>
-        <UsageCount Value="28"/>
+        <UsageCount Value="23"/>
       </Unit19>
       <Unit20>
         <Filename Value="LibUSB.pas"/>
-        <EditorIndex Value="10"/>
+        <EditorIndex Value="11"/>
         <CursorPos X="3" Y="13"/>
         <UsageCount Value="102"/>
         <Loaded Value="True"/>
       </Unit20>
       <Unit21>
         <Filename Value="usbhid.pas"/>
-        <EditorIndex Value="9"/>
+        <EditorIndex Value="10"/>
         <CursorPos Y="146"/>
         <UsageCount Value="107"/>
         <Loaded Value="True"/>
@@ -202,20 +203,20 @@
         <UnitName Value="KHexEditor"/>
         <TopLine Value="4002"/>
         <CursorPos X="101" Y="4035"/>
-        <UsageCount Value="29"/>
+        <UsageCount Value="24"/>
       </Unit22>
       <Unit23>
         <Filename Value="C:\lazarusF\4_khexeditor_1.5\source\keditcommon.pas"/>
         <UnitName Value="KEditCommon"/>
         <TopLine Value="339"/>
         <CursorPos X="5" Y="119"/>
-        <UsageCount Value="21"/>
+        <UsageCount Value="16"/>
       </Unit23>
       <Unit24>
         <Filename Value="usbasp45.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="60" Y="8"/>
-        <UsageCount Value="29"/>
+        <UsageCount Value="24"/>
       </Unit24>
       <Unit25>
         <Filename Value="C:\lazarus\lcl\dialogs.pp"/>
@@ -223,12 +224,12 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="493"/>
         <CursorPos X="20" Y="499"/>
-        <UsageCount Value="115"/>
+        <UsageCount Value="110"/>
       </Unit25>
       <Unit26>
         <Filename Value="usbasphw.pas"/>
         <UnitName Value="UsbAspHW"/>
-        <EditorIndex Value="7"/>
+        <EditorIndex Value="8"/>
         <CursorPos X="29" Y="203"/>
         <UsageCount Value="131"/>
         <Loaded Value="True"/>
@@ -236,14 +237,14 @@
       <Unit27>
         <Filename Value="basehw.pas"/>
         <UnitName Value="BaseHW"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="9"/>
         <CursorPos X="74" Y="13"/>
         <UsageCount Value="131"/>
         <Loaded Value="True"/>
       </Unit27>
       <Unit28>
         <Filename Value="scriptsfunc.pas"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="6"/>
         <TopLine Value="85"/>
         <CursorPos X="3" Y="100"/>
         <UsageCount Value="125"/>
@@ -251,7 +252,7 @@
       </Unit28>
       <Unit29>
         <Filename Value="ch341hw.pas"/>
-        <EditorIndex Value="20"/>
+        <EditorIndex Value="22"/>
         <CursorPos X="23" Y="239"/>
         <UsageCount Value="100"/>
         <Loaded Value="True"/>
@@ -259,7 +260,7 @@
       <Unit30>
         <Filename Value="ch341dll.pas"/>
         <UnitName Value="CH341DLL"/>
-        <EditorIndex Value="22"/>
+        <EditorIndex Value="24"/>
         <TopLine Value="479"/>
         <CursorPos X="38" Y="501"/>
         <UsageCount Value="110"/>
@@ -267,9 +268,9 @@
       </Unit30>
       <Unit31>
         <Filename Value="utilfunc.pas"/>
-        <EditorIndex Value="21"/>
-        <TopLine Value="137"/>
-        <CursorPos Y="157"/>
+        <EditorIndex Value="23"/>
+        <TopLine Value="142"/>
+        <CursorPos X="93" Y="159"/>
         <UsageCount Value="212"/>
         <Loaded Value="True"/>
       </Unit31>
@@ -278,27 +279,27 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="150"/>
         <CursorPos X="14" Y="98"/>
-        <UsageCount Value="117"/>
+        <UsageCount Value="112"/>
       </Unit32>
       <Unit33>
         <Filename Value="avrispmk2.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="51"/>
         <CursorPos X="118" Y="243"/>
-        <UsageCount Value="40"/>
+        <UsageCount Value="35"/>
       </Unit33>
       <Unit34>
         <Filename Value="..\..\UsbAsp-flash\software\usbasp25.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="86"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="4"/>
       </Unit34>
       <Unit35>
         <Filename Value="..\..\UsbAsp-flash\software\main.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="2282"/>
         <CursorPos X="17" Y="2310"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="4"/>
       </Unit35>
       <Unit36>
         <Filename Value="C:\lazarus\lcl\forms.pp"/>
@@ -306,14 +307,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="1491"/>
         <CursorPos X="15" Y="1506"/>
-        <UsageCount Value="22"/>
+        <UsageCount Value="17"/>
       </Unit36>
       <Unit37>
         <Filename Value="spimulti.pas"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="3"/>
         <TopLine Value="93"/>
         <CursorPos Y="136"/>
-        <UsageCount Value="48"/>
+        <UsageCount Value="70"/>
         <Loaded Value="True"/>
       </Unit37>
       <Unit38>
@@ -323,15 +324,15 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="64"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="0"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit38>
       <Unit39>
         <Filename Value="arduinohw.pas"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="7"/>
         <TopLine Value="365"/>
         <CursorPos X="16" Y="397"/>
-        <UsageCount Value="45"/>
+        <UsageCount Value="67"/>
         <Loaded Value="True"/>
       </Unit39>
       <Unit40>
@@ -339,135 +340,158 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="35"/>
         <CursorPos X="2" Y="52"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="0"/>
       </Unit40>
       <Unit41>
         <Filename Value="..\mphexeditor\src\mphexeditorlaz.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="11"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="0"/>
       </Unit41>
+      <Unit42>
+        <Filename Value="ch347hw.pas"/>
+        <EditorIndex Value="18"/>
+        <TopLine Value="142"/>
+        <CursorPos X="26" Y="164"/>
+        <UsageCount Value="32"/>
+        <Loaded Value="True"/>
+      </Unit42>
+      <Unit43>
+        <Filename Value="pascalc.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="233"/>
+        <CursorPos X="13" Y="248"/>
+        <UsageCount Value="7"/>
+      </Unit43>
+      <Unit44>
+        <Filename Value="F:\lazarus\lcl\include\control.inc"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="2962"/>
+        <CursorPos Y="2976"/>
+        <UsageCount Value="12"/>
+        <Loaded Value="True"/>
+      </Unit44>
     </Units>
     <JumpHistory Count="30" HistoryIndex="29">
       <Position1>
         <Filename Value="main.pas"/>
-        <Caret Line="824" TopLine="805"/>
+        <Caret Line="3148" TopLine="3131"/>
       </Position1>
       <Position2>
         <Filename Value="main.pas"/>
-        <Caret Line="825" TopLine="805"/>
+        <Caret Line="3150" TopLine="3131"/>
       </Position2>
       <Position3>
         <Filename Value="main.pas"/>
-        <Caret Line="846" Column="11" TopLine="798"/>
+        <Caret Line="3151" TopLine="3131"/>
       </Position3>
       <Position4>
         <Filename Value="main.pas"/>
-        <Caret Line="1485" Column="11" TopLine="1479"/>
+        <Caret Line="3152" TopLine="3131"/>
       </Position4>
       <Position5>
         <Filename Value="main.pas"/>
-        <Caret Line="1256" Column="6" TopLine="1238"/>
+        <Caret Line="3012" TopLine="3023"/>
       </Position5>
       <Position6>
         <Filename Value="main.pas"/>
-        <Caret Line="1520" Column="5" TopLine="1455"/>
+        <Caret Line="3390" Column="39" TopLine="2934"/>
       </Position6>
       <Position7>
         <Filename Value="main.pas"/>
-        <Caret Line="817" TopLine="799"/>
+        <Caret Line="3226" Column="69" TopLine="3210"/>
       </Position7>
       <Position8>
         <Filename Value="main.pas"/>
-        <Caret Line="1488" TopLine="1469"/>
+        <Caret Line="3853" Column="11" TopLine="3951"/>
       </Position8>
       <Position9>
         <Filename Value="main.pas"/>
-        <Caret Line="1240" Column="44" TopLine="1209"/>
+        <Caret Line="1360" Column="37" TopLine="1339"/>
       </Position9>
       <Position10>
         <Filename Value="main.pas"/>
-        <Caret Line="1583" Column="11" TopLine="1577"/>
+        <Caret Line="3853" Column="11" TopLine="3952"/>
       </Position10>
       <Position11>
         <Filename Value="main.pas"/>
-        <Caret Line="1337" Column="61" TopLine="1324"/>
+        <Caret Line="1503" Column="76" TopLine="1479"/>
       </Position11>
       <Position12>
         <Filename Value="main.pas"/>
-        <Caret Line="845" Column="7" TopLine="794"/>
+        <Caret Line="4012" Column="93" TopLine="3989"/>
       </Position12>
       <Position13>
         <Filename Value="main.pas"/>
-        <Caret Line="891" Column="9" TopLine="827"/>
+        <Caret Line="3332" Column="26" TopLine="3318"/>
       </Position13>
       <Position14>
         <Filename Value="main.pas"/>
-        <Caret Line="815" Column="3" TopLine="795"/>
+        <Caret Line="1714" Column="22" TopLine="1732"/>
       </Position14>
       <Position15>
         <Filename Value="main.pas"/>
-        <Caret Line="107" Column="5" TopLine="87"/>
+        <Caret Line="1722" Column="10" TopLine="1707"/>
       </Position15>
       <Position16>
-        <Filename Value="spi25nand.pas"/>
-        <Caret Line="202" TopLine="202"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="1841" Column="10" TopLine="1862"/>
       </Position16>
       <Position17>
-        <Filename Value="spi25nand.pas"/>
-        <Caret Line="96" Column="11" TopLine="96"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="1968" Column="12" TopLine="1954"/>
       </Position17>
       <Position18>
-        <Filename Value="spi25nand.pas"/>
-        <Caret Line="108" Column="10" TopLine="108"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="2006" Column="10" TopLine="1994"/>
       </Position18>
       <Position19>
         <Filename Value="main.pas"/>
-        <Caret Line="2954" Column="91" TopLine="2930"/>
+        <Caret Line="2013" Column="15" TopLine="1994"/>
       </Position19>
       <Position20>
         <Filename Value="main.pas"/>
-        <Caret Line="3252" Column="5" TopLine="3052"/>
+        <Caret Line="2022" Column="13" TopLine="1998"/>
       </Position20>
       <Position21>
         <Filename Value="main.pas"/>
-        <Caret Line="3277" Column="5" TopLine="3249"/>
+        <Caret Line="3136" Column="18" TopLine="3116"/>
       </Position21>
       <Position22>
         <Filename Value="main.pas"/>
-        <Caret Line="3266" Column="94" TopLine="3245"/>
+        <Caret Line="2022" Column="13" TopLine="2008"/>
       </Position22>
       <Position23>
         <Filename Value="main.pas"/>
-        <Caret Line="2579" Column="37" TopLine="2567"/>
+        <Caret Line="2013" Column="15" TopLine="2008"/>
       </Position23>
       <Position24>
         <Filename Value="main.pas"/>
-        <Caret Line="3144" Column="16" TopLine="3130"/>
+        <Caret Line="2006" Column="10" TopLine="1991"/>
       </Position24>
       <Position25>
         <Filename Value="main.pas"/>
-        <Caret Line="2676" Column="25" TopLine="2652"/>
+        <Caret Line="1968" Column="12" TopLine="1954"/>
       </Position25>
       <Position26>
-        <Filename Value="msgstr.pas"/>
-        <Caret Line="12" Column="3"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="1843" Column="48" TopLine="1874"/>
       </Position26>
       <Position27>
         <Filename Value="main.pas"/>
-        <Caret Line="2597" Column="73" TopLine="2575"/>
+        <Caret Line="1991" Column="5" TopLine="1830"/>
       </Position27>
       <Position28>
         <Filename Value="main.pas"/>
-        <Caret Line="2609" Column="78" TopLine="2592"/>
+        <Caret Line="3315" Column="112" TopLine="3291"/>
       </Position28>
       <Position29>
-        <Filename Value="spi25nand.pas"/>
-        <Caret Line="108" Column="88" TopLine="108"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="1991" Column="5" TopLine="1830"/>
       </Position29>
       <Position30>
-        <Filename Value="spi25nand.pas"/>
-        <Caret Line="86" Column="3" TopLine="75"/>
+        <Filename Value="main.pas"/>
+        <Caret Line="3316" Column="36" TopLine="3307"/>
       </Position30>
     </JumpHistory>
     <RunParams>

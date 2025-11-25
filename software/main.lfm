@@ -1,12 +1,12 @@
 object MainForm: TMainForm
   Left = 847
-  Height = 528
+  Height = 524
   Top = 263
-  Width = 827
+  Width = 843
   ActiveControl = RadioSPI
   Caption = 'AsProgrammer'
-  ClientHeight = 528
-  ClientWidth = 827
+  ClientHeight = 524
+  ClientWidth = 843
   Constraints.MinHeight = 300
   Constraints.MinWidth = 300
   Menu = MainMenu
@@ -18,8 +18,8 @@ object MainForm: TMainForm
   object ProgressBar: TProgressBar
     Left = 0
     Height = 20
-    Top = 413
-    Width = 827
+    Top = 409
+    Width = 843
     Align = alBottom
     Max = 0
     ParentFont = False
@@ -30,7 +30,7 @@ object MainForm: TMainForm
     Left = 0
     Height = 34
     Top = 0
-    Width = 827
+    Width = 843
     ButtonHeight = 32
     ButtonWidth = 32
     Caption = 'ToolBar'
@@ -198,11 +198,11 @@ object MainForm: TMainForm
   end
   object GroupChipSettings: TGroupBox
     Left = 0
-    Height = 356
+    Height = 352
     Top = 34
     Width = 160
     Align = alLeft
-    ClientHeight = 336
+    ClientHeight = 332
     ClientWidth = 156
     ParentFont = False
     TabOrder = 2
@@ -564,6 +564,7 @@ object MainForm: TMainForm
       Caption = 'Spare'
       ParentColor = False
       ParentFont = False
+      Visible = False
     end
     object ComboPageSpareSize: TComboBox
       Left = 24
@@ -578,14 +579,38 @@ object MainForm: TMainForm
       ShowHint = True
       TabOrder = 8
       Text = 'Spare size'
+      Visible = False
+    end
+    object Label_StartPage: TLabel
+      Left = 8
+      Height = 15
+      Top = 275
+      Width = 122
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'Start Page'
+      ParentColor = False
+      Visible = False
+    end
+    object StartPageEdit: TEdit
+      Left = 24
+      Height = 23
+      Top = 296
+      Width = 88
+      MaxLength = 8
+      TabOrder = 9
+      Text = '0'
+      Visible = False
+      OnChange = StartPageEditChange
+      OnKeyPress = StartPageEditKeyPress
     end
   end
   object MPHexEditorEx: TMPHexEditorEx
     Cursor = crIBeam
     Left = 160
-    Height = 356
+    Height = 352
     Top = 34
-    Width = 667
+    Width = 683
     CreateBackup = False
     BackupExtension = '.bak'
     SupportsOtherClipFormats = False
@@ -698,8 +723,8 @@ object MainForm: TMainForm
   object StatusBar: TStatusBar
     Left = 0
     Height = 23
-    Top = 390
-    Width = 827
+    Top = 386
+    Width = 843
     Panels = <    
       item
         Width = 120
@@ -721,11 +746,11 @@ object MainForm: TMainForm
   object Log: TMemo
     Left = 0
     Height = 90
-    Top = 438
-    Width = 827
+    Top = 434
+    Width = 843
     Align = alBottom
     Lines.Strings = (
-      'AsProgrammer v2.1.1'
+      'AsProgrammer v2.2.0'
       'https://github.com/nofeletru/UsbAsp-flash'
     )
     ParentFont = False
@@ -738,8 +763,8 @@ object MainForm: TMainForm
     Cursor = crVSplit
     Left = 0
     Height = 5
-    Top = 433
-    Width = 827
+    Top = 429
+    Width = 843
     Align = alBottom
     Anchors = [akBottom]
     ResizeAnchor = akBottom

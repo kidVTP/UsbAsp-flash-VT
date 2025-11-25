@@ -58,8 +58,6 @@
               <OverflowChecks Value="True"/>
               <StackChecks Value="True"/>
             </Checks>
-            <TargetProcessor Value="pentium3"/>
-            <TargetCPU Value="i386"/>
             <TargetOS Value="win32"/>
           </CodeGeneration>
           <Linking>
@@ -188,13 +186,14 @@
     <Version Value="11"/>
     <PathDelim Value="\"/>
     <Target>
-      <Filename Value="AsProgrammer"/>
+      <Filename Value="out\AsProgrammer"/>
     </Target>
     <SearchPaths>
       <IncludeFiles Value="$(ProjOutDir);JediInc"/>
       <UnitOutputDirectory Value="lib\$(TargetCPU)-$(TargetOS)"/>
     </SearchPaths>
     <Parsing>
+      <Style Value="2"/>
       <SyntaxOptions>
         <AllowLabel Value="False"/>
       </SyntaxOptions>

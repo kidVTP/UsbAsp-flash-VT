@@ -50,6 +50,8 @@
 {"hash":5924997,"name":"tmainform.labelspare.caption","sourcebytes":[83,112,97,114,101],"value":"Spare"},
 {"hash":141707141,"name":"tmainform.combopagesparesize.hint","sourcebytes":[83,112,97,114,101,32,115,105,122,101],"value":"Spare size"},
 {"hash":141707141,"name":"tmainform.combopagesparesize.text","sourcebytes":[83,112,97,114,101,32,115,105,122,101],"value":"Spare size"},
+{"hash":157338965,"name":"tmainform.label_startpage.caption","sourcebytes":[83,116,97,114,116,32,80,97,103,101],"value":"Start Page"},
+{"hash":48,"name":"tmainform.startpageedit.text","sourcebytes":[48],"value":"0"},
 {"hash":1235,"name":"tmainform.menuchip.caption","sourcebytes":[73,67],"value":"IC"},
 {"hash":94079128,"name":"tmainform.menufindchip.caption","sourcebytes":[83,101,97,114,99,104],"value":"Search"},
 {"hash":108725763,"name":"tmainform.menuoptions.caption","sourcebytes":[79,112,116,105,111,110,115],"value":"Options"},

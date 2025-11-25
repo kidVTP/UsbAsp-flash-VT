@@ -107,6 +107,8 @@ function EnterProgMode25NAND(spiSpeed: integer): boolean;
 procedure ExitProgMode25NAND;
 function UsbAsp25NAND_ReadID(var ID: MEMORY_ID_NAND): integer;
 function UsbAsp25NAND_ReadPage(PageAddr: longword; var buffer: array of byte; bufflen: integer): integer;
+function UsbAsp25NAND_ReadPageFast(PageAddr: longword; var buffer: array of byte; bufflen: integer): integer;
+function UsbAsp25NAND_ReadPageAuto(PageAddr: longword; var buffer: array of byte; bufflen: integer): integer;
 function UsbAsp25NAND_WritePage(PageAddr: longword; buffer: array of byte; bufflen: integer; spi_nand_total_page_size: integer): integer;
 function UsbAsp25NAND_EraseBlock(BlockAddr: longword): integer;
 function UsbAsp25NAND_ChipErase(): integer;
@@ -490,25 +492,49 @@ function UsbAsp25NAND_WaitWhileBusy(TimeoutMs: integer = 1000): boolean;
 var
   sreg: byte;
   StartTime: QWord;
+  poll_count: integer;
+  delay_us: integer;
 begin
   Result := False;
   StartTime := GetTickCount64;
+  poll_count := 0;
+
   repeat
     if UsbAsp25NAND_ReadStatus(sreg) < 0 then Exit;
+
     if not IsBitSet(sreg, SPI_NAND_STAT_BUSY) then
     begin
       Result := True;
-      Break;
+      Exit;
     end;
+
+    // Adaptive polling strategy:
+    // - 10 lần đầu: poll liên tục (no delay)
+    // - 10-50 lần: delay 50us
+    // - >50 lần: delay 200us
+    Inc(poll_count);
+
+    if poll_count < 10 then
+      delay_us := 0
+    else if poll_count < 50 then
+      delay_us := 50
+    else
+      delay_us := 200;
+
+    if delay_us > 0 then
+      Sleep(delay_us div 1000); // Convert to ms
+
     if (GetTickCount64 - StartTime) > QWord(TimeoutMs) then Exit;
   until False;
 end;
 
+
+ //  SPIReadNAND
 function SPIReadNAND(CS: byte; BufferLen: integer; out buffer: array of byte): integer;
 begin
   result := AsProgrammer.Programmer.SPIRead(CS, BufferLen, buffer);
 end;
-
+//  SPIWriteNAND
 function SPIWriteNAND(CS: byte; BufferLen: integer; buffer: array of byte): integer;
 begin
   result := AsProgrammer.Programmer.SPIWrite(CS, BufferLen, buffer);
@@ -577,14 +603,67 @@ end;
 function UsbAsp25NAND_ReadPage(PageAddr: longword; var buffer: array of byte;
   bufflen: integer): integer;
 var
-  cmd_buff: array[0..4] of byte;  // Max: opcode + 2 col + 1 dummy = 4 bytes
+  cmd_buff: array[0..3] of byte;
   addr_bytes: array[0..2] of byte;
   bytes_to_read: integer;
-  sreg: byte;
   column_addr: word;
   MfgID: byte;
   ChipInfo: TSpiNandChipInfo;
-  cmd_len: integer;
+begin
+  Result := -1;
+  bytes_to_read := bufflen;
+  MfgID := GetManufacturerID();
+  ChipInfo := GetChipInfo(MfgID, CurrentICParam.Planes);
+
+  // 1. Page Read to Cache (13h)
+  cmd_buff[0] := SPI_NAND_CMD_READ_PAGE;
+  GetRowAddressBytes(PageAddr, CurrentICParam.Planes,
+                     CurrentICParam.PagesPerBlock, MfgID, addr_bytes);
+  move(addr_bytes, cmd_buff[1], 3);
+  if AsProgrammer.Programmer.SPIWrite(1, 4, cmd_buff) < 0 then Exit;
+
+  // 2. Wait
+  if not UsbAsp25NAND_WaitWhileBusy(500) then Exit;
+
+  // 3. Standard Read (03h) với dummy byte
+  column_addr := GetColumnAddress(PageAddr, CurrentICParam.Planes,
+                                  CurrentICParam.PagesPerBlock, MfgID);
+
+  cmd_buff[0] := SPI_NAND_CMD_READ_CACHE;  // 03h
+  cmd_buff[1] := (column_addr shr 8) and $FF;
+  cmd_buff[2] := column_addr and $FF;
+
+  if ChipInfo.DummyBytes > 0 then
+  begin
+    cmd_buff[3] := $00;
+    // CS=0 để giữ CS low
+    if AsProgrammer.Programmer.SPIWrite(0, 4, cmd_buff) < 0 then Exit;
+  end
+  else
+  begin
+    // Không có dummy byte
+    if AsProgrammer.Programmer.SPIWrite(0, 3, cmd_buff) < 0 then Exit;
+  end;
+
+  // Đọc data với CS=1
+  if SPIReadNAND(1, bytes_to_read, buffer) <> bytes_to_read then Exit;
+
+  Result := bytes_to_read;
+end;
+
+
+// ============================================================================
+// FAST READ PAGE - Tối ưu hóa tốc độ với CH347 60MHz
+// ============================================================================
+function UsbAsp25NAND_ReadPageFast(PageAddr: longword; var buffer: array of byte;
+  bufflen: integer): integer;
+var
+  cmd_buff: array[0..3] of byte;
+  addr_bytes: array[0..2] of byte;
+  bytes_to_read: integer;
+  column_addr: word;
+  MfgID: byte;
+  ChipInfo: TSpiNandChipInfo;
 begin
   Result := -1;
   bytes_to_read := bufflen;
@@ -596,35 +675,53 @@ begin
   GetRowAddressBytes(PageAddr, CurrentICParam.Planes,
                      CurrentICParam.PagesPerBlock, MfgID, addr_bytes);
   move(addr_bytes, cmd_buff[1], 3);
+
+  // Single SPI transaction với CS=1 (auto-deactivate)
   if AsProgrammer.Programmer.SPIWrite(1, 4, cmd_buff) < 0 then Exit;
 
-  // 2. Wait
-  if not UsbAsp25NAND_WaitWhileBusy() then
+  // 2. Wait - optimized polling
+  if not UsbAsp25NAND_WaitWhileBusy(500) then
   begin
-    LogPrint('Read Page ' + IntToStr(PageAddr) + ': Timeout');
+    LogPrint('Fast Read Page ' + IntToStr(PageAddr) + ': Timeout');
     Exit;
   end;
 
-  // 3. Check status
-  if UsbAsp25NAND_ReadStatus(sreg) < 0 then Exit;
-
-  // 4. Read from Cache (03h) + Column Address + Dummy
-  cmd_buff[0] := SPI_NAND_CMD_READ_CACHE;
+  // 3. Fast Read from Cache (0Bh) - KẾT HỢP command + dummy trong 1 transaction
   column_addr := GetColumnAddress(PageAddr, CurrentICParam.Planes,
                                   CurrentICParam.PagesPerBlock, MfgID);
+
+  cmd_buff[0] := SPI_NAND_CMD_READ_CACHE_FAST;  // 0Bh
   cmd_buff[1] := (column_addr shr 8) and $FF;
   cmd_buff[2] := column_addr and $FF;
-  
-  // Thêm dummy byte(s) theo chip
-  cmd_len := 3 + ChipInfo.DummyBytes;
-  if ChipInfo.DummyBytes > 0 then
-    cmd_buff[3] := $00;
+  cmd_buff[3] := $00;  // Dummy byte (Fast Read luôn cần)
 
-  if AsProgrammer.Programmer.SPIWrite(0, cmd_len, cmd_buff) < 0 then Exit;
+  // QUAN TRỌNG: Dùng CS=0 để giữ CS low, sau đó đọc data liên tục
+  // Điều này giảm overhead giữa command và data
+  if AsProgrammer.Programmer.SPIWrite(0, 4, cmd_buff) < 0 then Exit;
+
+  // Đọc data ngay lập tức với CS=1 để kết thúc transaction
   if SPIReadNAND(1, bytes_to_read, buffer) <> bytes_to_read then Exit;
 
   Result := bytes_to_read;
 end;
+
+// ============================================================================
+// AUTO-DETECT BEST READ MODE
+// ============================================================================
+function UsbAsp25NAND_ReadPageAuto(PageAddr: longword; var buffer: array of byte;
+  bufflen: integer): integer;
+begin
+  // Hiện tại: chỉ hỗ trợ Single SPI
+  // Tương lai: có thể detect và dùng Dual/Quad nếu hardware hỗ trợ
+
+  // Ưu tiên Fast Read (0Bh) nếu có
+  Result := UsbAsp25NAND_ReadPageFast(PageAddr, buffer, bufflen);
+
+  // Fallback về Standard Read (03h) nếu Fast Read lỗi
+  if Result < 0 then
+    Result := UsbAsp25NAND_ReadPage(PageAddr, buffer, bufflen);
+end;
+
 
 // ============================================================================
 // WRITE PAGE - Universal for all manufacturers
@@ -712,7 +809,7 @@ begin
   if AsProgrammer.Programmer.SPIWrite(1, 4, cmd_buff) < 0 then Exit;
 
   // 3. Wait
-  if not UsbAsp25NAND_WaitWhileBusy(10000) then
+  if not UsbAsp25NAND_WaitWhileBusy(5000) then   // default 10000
   begin
     LogPrint('Erase Block ' + IntToStr(BlockIndex) + ': Timeout');
     Exit;
