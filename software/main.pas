@@ -4059,6 +4059,7 @@ begin
       RomF.Position := 0;
       MPHexEditorEx.LoadFromStream(RomF);
       StatusBar.Panels.Items[2].Text := LabelChipName.Caption;
+      RomF.clear;
     end;
     //I2C
     if RadioI2C.Checked then
@@ -4087,6 +4088,7 @@ begin
       RomF.Position := 0;
       MPHexEditorEx.LoadFromStream(RomF);
       StatusBar.Panels.Items[2].Text := LabelChipName.Caption;
+      RomF.clear;
     end;
     //Microwire
     if RadioMw.Checked then
@@ -4104,6 +4106,7 @@ begin
       RomF.Position := 0;
       MPHexEditorEx.LoadFromStream(RomF);
       StatusBar.Panels.Items[2].Text := LabelChipName.Caption;
+      RomF.clear;
     end;
 
     LogPrint(STR_TIME + TimeToStr(Time() - TimeCounter));
