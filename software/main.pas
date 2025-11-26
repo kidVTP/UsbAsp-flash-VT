@@ -847,6 +847,7 @@ end;
 function WriteFlash25NAND_SingleChunk(var RomStream: TMemoryStream;
                                        StartPage: cardinal;
                                        DataSize: cardinal;
+                                       ChunkIndex: integer;
                                        PageOffsetForProgress: cardinal = 0): boolean;
 var
   SPI_NAND_TOTAL_PAGE_SIZE: integer;
@@ -871,8 +872,8 @@ begin
   SetLength(DataChunk, SPI_NAND_TOTAL_PAGE_SIZE);
   TotalPages := (DataSize + PageSize - 1) div PageSize;
 
-  LogPrint('Writing chunk: Page ' + IntToStr(StartPage) + '..' +
-           IntToStr(StartPage + TotalPages - 1) + ' (' + IntToStr(DataSize) + ' bytes)');
+  // LogPrint('Writing chunk: Page ' + IntToStr(StartPage) + '..' +
+  //          IntToStr(StartPage + TotalPages - 1) + ' (' + IntToStr(DataSize) + ' bytes)');
 
   BytesWrite := 0;
   RomStream.Position := 0;
@@ -929,7 +930,7 @@ begin
     Exit;
   end;
 
-  LogPrint('Chunk write successful');
+  // LogPrint('Chunk #' + IntToStr(ChunkIndex + 1) + ' - ' + 'write successful');
   Result := True;
 end;
 
@@ -968,6 +969,8 @@ begin
 
   LogPrint('NAND Write - Chunked mode');
   LogPrint('Total pages: ' + IntToStr(TotalPages) + ', Chunks: ' + IntToStr(ChunkCount));
+  LogPrint('Total size: ' + IntToStr(TotalDataSize) + ' bytes (' +
+           IntToStr(TotalDataSize div (1024*1024)) + ' MB)'); 
 
   for ChunkIndex := 0 to ChunkCount - 1 do
   begin
@@ -976,6 +979,9 @@ begin
     PagesPerChunk := (CurrentChunkSize + PageSize - 1) div PageSize;
     CurrentStartPage := StartPage + (ChunkIndex * PagesPerChunk);
     PageOffsetForProgress := ChunkIndex * PagesPerChunk;
+
+    LogPrint('--- Write Chunk ' + IntToStr(ChunkIndex + 1) + '/' + IntToStr(ChunkCount) +
+             ' (' + IntToStr(CurrentChunkSize) + ' bytes) ---'); 
 
     // Tải chunk vào RomF
     RomF.Clear;
@@ -995,7 +1001,7 @@ begin
     end;
 
     RomF.Position := 0;
-    if not WriteFlash25NAND_SingleChunk(RomF, CurrentStartPage, RomF.Size, PageOffsetForProgress) then
+    if not WriteFlash25NAND_SingleChunk(RomF, CurrentStartPage, RomF.Size, ChunkIndex, PageOffsetForProgress) then
     begin
       LogPrint('Write failed at chunk ' + IntToStr(ChunkIndex + 1));
       Exit;
@@ -1422,9 +1428,9 @@ begin
   SetLength(DataChunk, SPI_NAND_TOTAL_PAGE_SIZE);
   PageCount := (DataSize + PageDataSize - 1) div PageDataSize;
 
-  LogPrint('Reading NAND chunk: Page ' + IntToStr(StartPage) + '..' +
-           IntToStr(StartPage + PageCount - 1) +
-           ' (' + IntToStr(DataSize) + ' bytes, ' + IntToStr(PageCount) + ' pages)');
+  // LogPrint('Reading NAND chunk: Page ' + IntToStr(StartPage) + '..' +
+  //          IntToStr(StartPage + PageCount - 1) +
+  //          ' (' + IntToStr(DataSize) + ' bytes, ' + IntToStr(PageCount) + ' pages)');
 
   BytesRead := 0;
   RomStream.Clear;
@@ -1456,6 +1462,7 @@ begin
 
   if BytesRead <> DataSize then
     LogPrint('Read incomplete: expected ' + IntToStr(DataSize) + ', read ' + IntToStr(BytesRead));
+ 
 end;
 
 
@@ -1492,11 +1499,12 @@ begin
   LogPrint('NAND Read - Chunked Mode');
   LogPrint('Total size: ' + IntToStr(TotalDataSize) + ' bytes (' +
            IntToStr(TotalDataSize div (1024*1024)) + ' MB)');
-  LogPrint('Chunk size: ' + IntToStr(CHUNK_SIZE div (1024*1024)) + ' MB');
-  LogPrint('Total chunks: ' + IntToStr(ChunkCount));
-  LogPrint('Total pages: ' + IntToStr(TotalPages));
-  LogPrint('Start page: ' + IntToStr(StartPage));
-  LogPrint('======================================');
+  LogPrint('Total pages: ' + IntToStr(TotalPages) + ', Total chunks: ' + IntToStr(ChunkCount));
+  // LogPrint('Chunk size: ' + IntToStr(CHUNK_SIZE div (1024*1024)) + ' MB');
+  //LogPrint('Total chunks: ' + IntToStr(ChunkCount));
+  // LogPrint('Total pages: ' + IntToStr(TotalPages));
+  // LogPrint('Start page: ' + IntToStr(StartPage));
+  //LogPrint('======================================');
 
   if ShowProgress then
   begin
@@ -1521,6 +1529,7 @@ begin
     TempStream := TMemoryStream.Create;
     try
       ReadFlash25NAND_SingleChunk(TempStream, CurrentStartPage, CurrentChunkSize, PageOffsetForProgress);
+      //LogPrint('Chunk #' + IntToStr(ChunkIndex + 1) + ' - ' + STR_DONE);
       //RomF.CopyFrom(TempStream, 0); // Gộp vào RomF   StartPage = 0
       // Sau khi đọc xong chunk vào TempStream   StartPage > 0
       TempStream.Position := 0; // ← BẮT BUỘC: đưa về đầu ← Reset vị trí đọc
@@ -1810,9 +1819,9 @@ begin
 
   PageCount := (DataSize + PageDataSize - 1) div PageDataSize;
 
-  LogPrint('Verifying chunk #' + IntToStr(ChunkIndex) +
-           ': Page ' + IntToStr(StartPage) + '..' + IntToStr(StartPage + PageCount - 1) +
-           ' (' + IntToStr(DataSize) + ' bytes, ' + IntToStr(PageCount) + ' pages)');
+  // LogPrint('Verifying chunk #' + IntToStr(ChunkIndex) +
+  //          ': Page ' + IntToStr(StartPage) + '..' + IntToStr(StartPage + PageCount - 1) +
+  //          ' (' + IntToStr(DataSize) + ' bytes, ' + IntToStr(PageCount) + ' pages)');
 
   BytesRead := 0;
   RomStream.Position := 0;
@@ -1884,7 +1893,7 @@ begin
   end
   else
   begin
-    LogPrint('Chunk #' + IntToStr(ChunkIndex) + ' - ' + STR_DONE);
+    // LogPrint('Chunk #' + IntToStr(ChunkIndex + 1) + ' - ' + STR_DONE);
     Result := True;
   end;
 end;
@@ -1938,11 +1947,12 @@ begin
     LogPrint('NAND Verify - Chunked Mode');
   LogPrint('Total size: ' + IntToStr(TotalDataSize) + ' bytes (' +
            IntToStr(TotalDataSize div (1024*1024)) + ' MB)');
-  LogPrint('Chunk size: ' + IntToStr(ChunkSize div (1024*1024)) + ' MB');
-  LogPrint('Total chunks: ' + IntToStr(ChunkCount));
-  LogPrint('Total pages: ' + IntToStr(TotalPages));
-  LogPrint('Start page: ' + IntToStr(StartPage));
-  LogPrint('======================================');
+  LogPrint('Total pages: ' + IntToStr(TotalPages) + ', Total chunks: ' + IntToStr(ChunkCount));
+  // LogPrint('Chunk size: ' + IntToStr(ChunkSize div (1024*1024)) + ' MB');
+  // LogPrint('Total chunks: ' + IntToStr(ChunkCount));
+  // LogPrint('Total pages: ' + IntToStr(TotalPages));
+  // LogPrint('Start page: ' + IntToStr(StartPage));
+  // LogPrint('======================================');
 
   if ShowProgress then
   begin
@@ -1955,14 +1965,15 @@ begin
 
   for ChunkIndex := 0 to ChunkCount - 1 do
   begin
-    LogPrint('');
-    LogPrint('--- Processing Chunk ' + IntToStr(ChunkIndex + 1) + '/' + IntToStr(ChunkCount) + ' ---');
 
     FileOffsetStart := Int64(ChunkIndex) * ChunkSize;
     if ChunkIndex = ChunkCount - 1 then
       CurrentChunkSize := TotalDataSize - FileOffsetStart
     else
       CurrentChunkSize := ChunkSize;
+
+    LogPrint('--- Verify Chunk ' + IntToStr(ChunkIndex + 1) + '/' + IntToStr(ChunkCount) +
+          ' (' + IntToStr(CurrentChunkSize) + ' bytes) ---'); 
 
     // === XỬ LÝ BLANK CHECK ===
     if BlankCheck then

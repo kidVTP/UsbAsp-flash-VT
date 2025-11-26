@@ -1,5 +1,6 @@
 program AsProgrammer;
 
+{$SetPEFlags $20}     // Large Address Aware (cho phép dùng đến 4GB RAM trên Windows 64-bit)
 {$mode objfpc}{$H+}
 
 uses
