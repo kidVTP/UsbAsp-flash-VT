@@ -807,10 +807,46 @@ begin
 end;
 
 
+function Flash25NAND_IsPageAllFF(const DataChunk: array of byte; PageSize: integer): boolean;
+var
+  i: integer;
+  FirstByte, MiddleByte, LastByte: byte;
+  PageIndex: integer;
+begin
+  Result := False;
+  if PageSize <= 0 then Exit;
+
+  FirstByte := DataChunk[0];
+  if FirstByte <> $FF then Exit;
+
+  if PageSize = 1 then
+  begin
+    Result := True;
+    Exit;
+  end;
+
+  PageIndex := (PageSize - 1) div 2;
+  MiddleByte := DataChunk[PageIndex];
+  if MiddleByte <> $FF then Exit;
+
+  LastByte := DataChunk[PageSize - 1];
+  if LastByte <> $FF then Exit;
+
+  // Kiểm tra đầu
+  for i := 1 to PageIndex - 1 do
+    if DataChunk[i] <> $FF then Exit;
+
+  // Kiểm tra cuối
+  for i := PageIndex + 1 to PageSize - 2 do
+    if DataChunk[i] <> $FF then Exit;
+
+  Result := True;
+end;
+
+
 function WriteFlash25NAND_SingleChunk(var RomStream: TMemoryStream;
                                        StartPage: cardinal;
                                        DataSize: cardinal;
-                                       PageSize: word;
                                        PageOffsetForProgress: cardinal = 0): boolean;
 var
   SPI_NAND_TOTAL_PAGE_SIZE: integer;
@@ -818,16 +854,19 @@ var
   BytesWrite: cardinal;
   PageAddr, TotalPages: cardinal;
   FileOffsetInStream: Int64;
-  BytesToReadThisPage: cardinal;
+  BytesToWriteThisPage: cardinal;
+  PageSize: integer;
+  SkipPage: boolean;
   i: integer;
 begin
   Result := False;
-  if (DataSize = 0) then
+  if DataSize = 0 then
   begin
     LogPrint(STR_CHECK_SETTINGS);
     Exit;
   end;
 
+  PageSize := CurrentICParam.Page;
   SPI_NAND_TOTAL_PAGE_SIZE := PageSize + CurrentICParam.Spare;
   SetLength(DataChunk, SPI_NAND_TOTAL_PAGE_SIZE);
   TotalPages := (DataSize + PageSize - 1) div PageSize;
@@ -840,30 +879,40 @@ begin
 
   for PageAddr := 0 to TotalPages - 1 do
   begin
-    // Reset buffer
+    // Reset buffer to $FF (trạng thái mặc định của NAND)
     FillByte(DataChunk[0], SPI_NAND_TOTAL_PAGE_SIZE, $FF);
 
-    // Đọc dữ liệu page từ stream
+    // Đọc dữ liệu từ stream
     FileOffsetInStream := Int64(PageAddr) * PageSize;
     if FileOffsetInStream < RomStream.Size then
     begin
-      BytesToReadThisPage := Min(PageSize, RomStream.Size - FileOffsetInStream);
+      BytesToWriteThisPage := Min(PageSize, RomStream.Size - FileOffsetInStream);
       RomStream.Position := FileOffsetInStream;
-      RomStream.ReadBuffer(DataChunk[0], BytesToReadThisPage);
+      RomStream.ReadBuffer(DataChunk[0], BytesToWriteThisPage);
       // Phần còn lại (nếu có) giữ nguyên là $FF
     end;
 
-    // Ghi page vào chip
-    if UsbAsp25NAND_WritePage(StartPage + PageAddr, DataChunk, PageSize, SPI_NAND_TOTAL_PAGE_SIZE) <> PageSize then
+    // === SKIP PAGE NẾU TOÀN $FF VÀ MenuSkipFF.Checked ===
+    SkipPage := False;
+    if MainForm.MenuSkipFF.Checked then
     begin
-      LogPrint('Error writing page ' + IntToStr(StartPage + PageAddr));
-      Exit;
+      if Flash25NAND_IsPageAllFF(DataChunk, PageSize) then
+        SkipPage := True;
+    end;
+
+    if not SkipPage then
+    begin
+      if UsbAsp25NAND_WritePage(StartPage + PageAddr, DataChunk, PageSize, SPI_NAND_TOTAL_PAGE_SIZE) <> PageSize then
+      begin
+        LogPrint('Error writing page ' + IntToStr(StartPage + PageAddr));
+        Exit;
+      end;
     end;
 
     Inc(BytesWrite, PageSize);
     if BytesWrite >= DataSize then Break;
 
-    // Cập nhật progress
+    // Cập nhật tiến trình
     MainForm.ProgressBar.Position := PageOffsetForProgress + PageAddr + 1;
     if (PageAddr mod 100 = 0) then
       Application.ProcessMessages;
@@ -884,9 +933,9 @@ begin
   Result := True;
 end;
 
+
 function WriteFlash25NAND_Chunked(StartPage: cardinal;
                                   TotalDataSize: cardinal;
-                                  PageSize: word;
                                   ShowProgress: boolean = True): boolean;
 const
   CHUNK_SIZE = 134217728; // 128 MB
@@ -898,7 +947,7 @@ var
   PagesPerChunk: cardinal;
   CurrentStartPage: cardinal;
   PageOffsetForProgress: cardinal;
-  TotalPages: cardinal;
+  TotalPages, PageSize: cardinal;
 begin
   Result := False;
   if TotalDataSize = 0 then
@@ -907,6 +956,7 @@ begin
     Exit;
   end;
 
+  PageSize := CurrentICParam.Page;
   TotalPages := (TotalDataSize + PageSize - 1) div PageSize;
   ChunkCount := (TotalDataSize + CHUNK_SIZE - 1) div CHUNK_SIZE;
 
@@ -927,9 +977,8 @@ begin
     CurrentStartPage := StartPage + (ChunkIndex * PagesPerChunk);
     PageOffsetForProgress := ChunkIndex * PagesPerChunk;
 
-    // Load chunk vào RomF
+    // Tải chunk vào RomF
     RomF.Clear;
-    RomF.Size := 0;
     try
       MainForm.MPHexEditorEx.SaveRangeToStream(RomF, FileOffsetStart, CurrentChunkSize);
       if RomF.Size <> CurrentChunkSize then
@@ -946,7 +995,7 @@ begin
     end;
 
     RomF.Position := 0;
-    if not WriteFlash25NAND_SingleChunk(RomF, CurrentStartPage, RomF.Size, PageSize, PageOffsetForProgress) then
+    if not WriteFlash25NAND_SingleChunk(RomF, CurrentStartPage, RomF.Size, PageOffsetForProgress) then
     begin
       LogPrint('Write failed at chunk ' + IntToStr(ChunkIndex + 1));
       Exit;
@@ -963,6 +1012,7 @@ begin
 end;
 
 
+
 // Cập nhật hàm WriteFlash25NAND
 function WriteFlash25NAND(StartPage: cardinal;
                           DataSize: cardinal;
@@ -970,13 +1020,15 @@ function WriteFlash25NAND(StartPage: cardinal;
   begin
     if DataSize < 67108864 then // < 64 MB
     begin
-
-      //Result := WriteFlash25NAND_SingleChunk(RomStream, StartPage, DataSize, PageSize);
+      //RomF.Clear;
+      //MPHexEditorEx.SaveToStream(RomF);
+      //RomF.Position := 0;
+      //Result := WriteFlash25NAND_SingleChunk(RomF, StartPage, DataSize);
     end
     else
     begin
       // Dùng chunked
-      Result := WriteFlash25NAND_Chunked(StartPage, DataSize, PageSize, True);
+      Result := WriteFlash25NAND_Chunked(StartPage, DataSize, True);
     end;
 end;
 
@@ -1469,7 +1521,11 @@ begin
     TempStream := TMemoryStream.Create;
     try
       ReadFlash25NAND_SingleChunk(TempStream, CurrentStartPage, CurrentChunkSize, PageOffsetForProgress);
-      RomF.CopyFrom(TempStream, 0); // Gộp vào RomF
+      //RomF.CopyFrom(TempStream, 0); // Gộp vào RomF   StartPage = 0
+      // Sau khi đọc xong chunk vào TempStream   StartPage > 0
+      TempStream.Position := 0; // ← BẮT BUỘC: đưa về đầu ← Reset vị trí đọc
+      RomF.Position := RomF.Size; // ← Đặt con trỏ ở cuối RomF
+      RomF.CopyFrom(TempStream, TempStream.Size); // ← Sao chép toàn bộ
     finally
       TempStream.Free;
     end;
@@ -3028,12 +3084,13 @@ begin
       Exit;
     end;
 
-           // ========================================================================
+    // ========================================================================
     // SPI NAND - CHUNKED Write
     // ========================================================================
     if RadioSPI.Checked and (ComboSPICMD.ItemIndex = SPI_CMD_25_NAND) then
     begin
       UsedSPICmd := SPI_CMD_25_NAND;
+      TimeCounter := Time();
 
       if not EnterProgMode25NAND(SetSPISpeed(0)) then
       begin
@@ -3043,27 +3100,29 @@ begin
       
       TotalDataSize := MPHexEditorEx.DataSize;
       
-      WriteFlash25NAND(StrToInt(StartPageEdit.Text), TotalDataSize, StrToInt(ComboPageSize.Text));
+      //WriteFlash25NAND(StrToInt(StartPageEdit.Text), TotalDataSize, StrToInt(ComboPageSize.Text));
+      WriteFlash25NAND_Chunked(StrToInt(StartPageEdit.Text), TotalDataSize, True);
       
       // ======================================================================
       // AUTO VERIFY SAU KHI WRITE
       // ======================================================================
-      if (MenuAutoCheck.Checked) then
+      if MenuAutoCheck.Checked then
+      begin
         LogPrint(STR_TIME + TimeToStr(Time() - TimeCounter));
         TimeCounter := Time();
-        begin
-          // ================================================================
-          // NAND: Dùng hàm wrapper đơn giản (tự động xử lý chunking)
-          // ================================================================
-          LogPrint('Starting auto-verify for NAND...');
 
-          if not VerifyFlash25NAND_Chunked(StrToInt(StartPageEdit.Text),
-                                           MPHexEditorEx.DataSize,
-                                           True) then
-          begin
-            LogPrint('Auto-verify FAILED!');
-          end;
-        end 
+        // ================================================================
+        // NAND: Dùng hàm wrapper đơn giản (tự động xử lý chunking)
+        // ================================================================
+        LogPrint('Starting auto-verify for NAND...');
+
+        if not VerifyFlash25NAND_Chunked(StrToInt(StartPageEdit.Text),
+                                         MPHexEditorEx.DataSize,
+                                         True) then
+        begin
+          LogPrint('Auto-verify FAILED!');
+        end;
+      end;
     end
 
     // SPI
