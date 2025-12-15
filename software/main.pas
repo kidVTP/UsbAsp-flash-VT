@@ -4059,7 +4059,7 @@ begin
       RomF.Position := 0;
       MPHexEditorEx.LoadFromStream(RomF);
       StatusBar.Panels.Items[2].Text := LabelChipName.Caption;
-      RomF.clear;
+
     end;
     //I2C
     if RadioI2C.Checked then
@@ -4088,7 +4088,7 @@ begin
       RomF.Position := 0;
       MPHexEditorEx.LoadFromStream(RomF);
       StatusBar.Panels.Items[2].Text := LabelChipName.Caption;
-      RomF.clear;
+
     end;
     //Microwire
     if RadioMw.Checked then
@@ -4106,7 +4106,7 @@ begin
       RomF.Position := 0;
       MPHexEditorEx.LoadFromStream(RomF);
       StatusBar.Panels.Items[2].Text := LabelChipName.Caption;
-      RomF.clear;
+
     end;
 
     LogPrint(STR_TIME + TimeToStr(Time() - TimeCounter));
@@ -4121,7 +4121,8 @@ begin
     else if UsedSPICmd in [SPI_CMD_25, SPI_CMD_45, SPI_CMD_95, SPI_CMD_KB] then // Các loại khác dùng 25
       ExitProgMode25; // Gọi hàm NOR
     // I2C và MW có logic riêng, không cần kiểm tra UsedSPICmd
-
+    // clear RomF
+    RomF.clear;
     AsProgrammer.Programmer.DevClose;
     UnlockControl();
   end;
